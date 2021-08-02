@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe 'merchant items show page' do
+RSpec.describe 'merchant items index page' do
   before :each do
     @merchant1 = Merchant.create!(name: 'Sparkys Shop')
     @merchant2 = Merchant.create!(name: 'BBs Petstore')
@@ -51,37 +51,36 @@ RSpec.describe 'merchant items show page' do
     @invoice5.items << [@item2]
     @invoice6.items << [@item1]
   end
-  # Merchant Item Update
-  # As a merchant,
-  # When I visit the merchant show page of an item x
-  # I see a link to update the item information. x
-  # When I click the link x
-  # Then I am taken to a page to edit this item x
-  # And I see a form filled in with the existing item attribute information x
-  # When I update the information in the form and I click ‘submit’ x
-  # Then I am redirected back to the item show page where I see the updated information x
-  # And I see a flash message stating that the information has been successfully updated. x
+  # Merchant Item Create
+  # As a merchant x
+  # When I visit my items index page x
+  # I see a link to create a new item. x
+  # When I click on the link, x
+  # I am taken to a form that allows me to add item information. x
+  # When I fill out the form I click ‘Submit’ x
+  # Then I am taken back to the items index page x
+  # And I see the item I just created displayed in the list of items. x
 
-  describe 'as a merchant' do
-    describe 'when i visit the merchant show page of an item' do
-      it 'can see a link to update the item information' do
-        visit "/merchants/#{@merchant1.id}/items/#{@item1.id}"
+  describe 'as a merchant when i visit my items index page' do
+    it 'can create an item by interacting with a form' do
+      visit "/merchants/#{@merchant1.id}/items"
 
-        click_on "Edit This Item"
+      expect(page).to have_content("Create a New Item")
+      expect(page).to have_link("Create a New Item")
 
-        expect(current_path).to eq("/merchants/#{@merchant1.id}/items/#{@item1.id}/edit")
+      click_on "Create a New Item"
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/items/new")
 
-        fill_in "Name", with: "Beddy Tear"
-        fill_in "Description", with: "I love fluffy things"
-        fill_in "Unit Price", with: 399
-        click_on "Update My Item"
-
-        expect(current_path).to eq("/merchants/#{@item1.merchant_id}/items/#{@item1.id}")
-        expect(page).to have_content("Beddy Tear")
-        expect(page).to have_content("I love fluffy things")
-        expect(page).to have_content(399)
-        expect(page).to have_content("Item Successfully Updated!")
-      end
+      fill_in "Name", with: "Chewbacca Chew Toy"
+      fill_in "Description", with: "So Chewy"
+      fill_in "Unit Price", with: 699
+      click_on "Submit"
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/items")
+      save_and_open_page
+      #dane, 8.1: is there a test i can insert where the page can test if the last item's attributes are a specific thing?
+      expect(page).to have_content("Chewbacca Chew Toy")
+      expect(page).to have_content("So Chewy")
+      expect(page).to have_content(699)
     end
   end
 end
