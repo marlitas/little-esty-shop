@@ -1,1 +1,7 @@
 <h1>My Items</h1>
+<% @merchant.items.each do |item| %>
+  <p><%= item.name %></p>
+  <p><%= item.description %></p>
+  <p><%= item.unit_price %></p>
+<% end %>
+<%= link_to 'Create a New Item', "/merchants/#{@merchant.id}/items/new" %>
