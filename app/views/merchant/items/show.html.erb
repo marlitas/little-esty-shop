@@ -7,3 +7,9 @@
 <p><%= @item.description %></p>
 <p><%= @item.unit_price %></p>
 <p><%= link_to "Edit This Item", "/merchants/#{@item.merchant_id}/items/#{@item.id}/edit" %></p>
+
+<h1><%= @item.name %> </h1>
+
+<p>Description: <%= @item.description %> </p>
+<p>Current Selling Price: $<%= @item.price_to_dollars %> </p>
+

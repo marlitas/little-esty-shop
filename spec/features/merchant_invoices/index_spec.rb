@@ -1,18 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe Invoice, type: :model do
-
-  describe 'relationships' do
-    it {should belong_to :customer}
-    it {should have_many :transactions}
-    it {should have_many :invoice_items}
-    it {should have_many(:items).through(:invoice_items)}
-  end
-
-  describe 'validations' do
-    it {should define_enum_for(:status).with_values([:cancelled, 'in progress', :completed])}
-  end
-
+RSpec.describe 'Merchant Invoices Index Page' do
   before :each do
     @merchant1 = Merchant.create!(name: 'Sparkys Shop')
     @merchant2 = Merchant.create!(name: 'BBs Petstore')
@@ -48,35 +36,28 @@ RSpec.describe Invoice, type: :model do
     @invoice3.items << [@item3, @item4]
     @invoice4.items << [@item4]
     @invoice5.items << [@item4]
-
-    @ii1 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item1.id, quantity: 2, status: 0)
-    @ii2 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item2.id, quantity: 1, status: 0)
-    @ii3 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item4.id, quantity: 1, status: 0)
+    @invoice6.items << [@item1, @item2]
   end
 
-  describe 'class methods' do
-    it 'can retrieve invoices tied to merchant' do
-      expect(Invoice.merchant_invoices(@merchant1.id).first.id).to eq(@invoice1.id)
-      expect(Invoice.merchant_invoices(@merchant1.id).last.id).to eq(@invoice6.id)
-      expect(Invoice.merchant_invoices(@merchant1.id).length).to eq(4)
+  describe 'merchant' do
+    it 'displays all invoices with at least one merchant item' do
+      visit "/merchants/#{@merchant1.id}/invoices"
+
+      expect(page).to have_content(@invoice1.id.to_s)
+      expect(page).to have_content(@invoice2.id.to_s)
+      expect(page).to have_content(@invoice3.id.to_s)
+      expect(page).to have_content(@invoice6.id.to_s)
+
+      expect(page).to_not have_content(@invoice4.id.to_s)
+      expect(page).to_not have_content(@invoice5.id.to_s)
     end
 
-    describe '::admin_incomplete_invoices' do
-      it 'can find all the incomplete invoices listed by least recent created at date' do #returns only one 'completed' invoice (invoice6)
-       # expect(Invoice.admin_incomplete_invoices).to eq([@invoice1, @invoice2, @invoice4, @invoice5])
-     end
-  end
+    it 'can link an invoice to its show page' do
+      visit "/merchants/#{@merchant1.id}/invoices"
 
-  describe 'instance methods' do
-    it 'can retrieve items tied to merchant' do
-      expect(@invoice6.merchant_items(@merchant1.id).first.name).to eq(@item1.name)
-      expect(@invoice6.merchant_items(@merchant1.id).last.name).to eq(@item2.name)
-      expect(@invoice6.merchant_items(@merchant1.id).length).to eq(2)
-    end
+      click_on(@invoice1.id.to_s)
 
-    it 'can calculate total revenue for merchant' do
-      expect(@invoice6.total_revenue(@merchant1.id)).to eq(70.00)
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}")
     end
   end
-end
 end
