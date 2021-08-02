@@ -24,13 +24,12 @@ RSpec.describe 'Invoice Show page' do
   end
 
   it 'can display the attributes of a particular invoice' do
-
     expect(page).to have_content(@invoice_1.id)
     expect(page).to have_content(@invoice_1.status)
     expect(page).to have_content(@invoice_1.created_at.strftime("%A, %B %d, %Y"))
-    # expect(page).to have_content(@customer_1.first_name)
-    # expect(page).to have_content(@customer_1.last_name)
-    expect(page).to have_no_content(@invoice_2.id)
+    expect(page).to have_content(@customer_1.first_name)
+    expect(page).to have_content(@customer_1.last_name)
+    expect(page).to_not have_content(@invoice_2.id)
   end
 
   it 'can display all of the items on that invoice' do

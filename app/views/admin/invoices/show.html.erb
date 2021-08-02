@@ -5,8 +5,8 @@
 <h2>Invoice #<%= @invoice.id %></h2>
 <p>Status: <%= @invoice.status %></p>
 <p>Created At: <%= @invoice.created_at.strftime("%A, %B %d, %Y") %></p>
-<%# <%= @invoice.customer_id.first_name %>
-<%# <%= @invoice.customer_id.last_name %>
+<%= Customer.find(@invoice.customer_id).first_name %> <%= Customer.find(@invoice.customer_id).last_name %>
+
 
 <h3>Invoice Items</h3>
 <% @invoice.items.each do |item| %>
