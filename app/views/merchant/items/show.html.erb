@@ -1,1 +1,4 @@
-<h1><%= link_to "#{@item.name}", "/items/#{@item.id}/edit" %></h1>
+<h1><%= link_to "Edit This Item", "/merchants/#{@item.merchant_id}/items/#{@item.id}/edit" %></h1>
+<p><%= @item.name %></p>
+<p><%= @item.description %></p>
+<p><%= @item.unit_price %></p>

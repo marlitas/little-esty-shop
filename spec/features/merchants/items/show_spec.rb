@@ -53,13 +53,13 @@ RSpec.describe 'merchant items show page' do
   end
   # Merchant Item Update
   # As a merchant,
-  # When I visit the merchant show page of an item
-  # I see a link to update the item information.
-  # When I click the link
-  # Then I am taken to a page to edit this item
-  # And I see a form filled in with the existing item attribute information
-  # When I update the information in the form and I click ‘submit’
-  # Then I am redirected back to the item show page where I see the updated information
+  # When I visit the merchant show page of an item x
+  # I see a link to update the item information. x
+  # When I click the link x
+  # Then I am taken to a page to edit this item x
+  # And I see a form filled in with the existing item attribute information x
+  # When I update the information in the form and I click ‘submit’ x
+  # Then I am redirected back to the item show page where I see the updated information x
   # And I see a flash message stating that the information has been successfully updated.
 
   describe 'as a merchant' do
@@ -67,8 +67,19 @@ RSpec.describe 'merchant items show page' do
       it 'can see a link to update the item information' do
         visit "/merchants/#{@merchant1.id}/items/#{@item1.id}"
 
-        click_on "#{@item1.name}"
-        expect(current_path).to eq("/items/#{@item1.id}/edit")
+        click_on "Edit This Item"
+
+        expect(current_path).to eq("/merchants/#{@merchant1.id}/items/#{@item1.id}/edit")
+
+        fill_in "Name", with: "Beddy Tear"
+        fill_in "Description", with: "I love fluffy things"
+        fill_in "Unit Price", with: 399
+        click_on "Update My Item"
+        save_and_open_page
+        expect(current_path).to eq("/merchants/#{@item1.merchant_id}/items/#{@item1.id}")
+        expect(page).to have_content("Beddy Tear")
+        expect(page).to have_content("I love fluffy things")
+        expect(page).to have_content(399)
       end
     end
   end
