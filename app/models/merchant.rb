@@ -24,7 +24,7 @@ class Merchant < ApplicationRecord
 
   def self.top_five_by_revenue #is this working?? transactions with at least one success??
     Merchant.joins(items: :invoices).joins(invoices: :transactions)
-    .select('merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) as total_revenue')
+    .select('merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price)/100 as total_revenue')
     .group(:id)
     .where('transactions.result = 0')
     .order('total_revenue desc')
