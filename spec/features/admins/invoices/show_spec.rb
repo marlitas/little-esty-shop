@@ -33,7 +33,6 @@ RSpec.describe 'Invoice Show page' do
   end
 
   it 'can display all of the items on that invoice' do
-
     expect(page).to have_content(@item_1.name)
     expect(page).to have_content(@item_2.name)
     expect(page).to have_content(@item_3.name)
@@ -44,7 +43,7 @@ RSpec.describe 'Invoice Show page' do
     within(:css, "##{@item_1.id}") do
       expect(page).to have_content(@item_1.name)
       expect(page).to have_content(@ii1.quantity)
-      expect(page).to have_content(@ii1.unit_price)
+      expect(page).to have_content(@ii1.unit_price_to_dollars)
       expect(page).to have_content(@ii1.status)
     end
   end
@@ -57,5 +56,11 @@ RSpec.describe 'Invoice Show page' do
     @invoice_1.reload
 
     expect(@invoice_1.status).to eq('in progress')
+  end
+
+  it 'displays total revenue from this invoice' do
+    save_and_open_page
+    expect(page).to have_content("Total Revenue")
+    expect(page).to have_content(100.00)
   end
 end
