@@ -58,7 +58,7 @@ RSpec.describe Merchant, type: :model do
       end
     end
 
-    describe '#invoice_items' do
+    describe '#items_on_invoice' do
       it 'can retrieve invoice items' do
         expect(@merchant_1.items_on_invoice(@invoice1.id).first.name).to eq(@item1.name)
         expect(@merchant_1.items_on_invoice(@invoice1.id).last.name).to eq(@item2.name)
