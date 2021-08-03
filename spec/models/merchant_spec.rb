@@ -96,6 +96,12 @@ RSpec.describe Merchant, type: :model do
         expect(@merchant_1.items_on_invoice(@invoice1.id).length).to eq(2)
       end
     end
+
+    describe '#top_sale_date_for_merchant' do
+      it 'can determine the top sales date for a merchant' do
+        expect(@merchant_1.top_sale_date_for_merchant.created_at.strftime("%A, %B %d, %Y")).to eq("Tuesday, August 03, 2021")
+      end
+    end
   end
 end
 end
