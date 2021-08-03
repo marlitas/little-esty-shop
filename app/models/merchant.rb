@@ -22,9 +22,9 @@ class Merchant < ApplicationRecord
     Merchant.where('status = ?', false)
   end
 
-  def self.top_five_by_revenue #is this working?? transactions with at least one success??
+  def self.top_five_by_revenue
     Merchant.joins(items: :invoices).joins(invoices: :transactions)
-    .select('merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price) as total_revenue')
+    .select('merchants.*, SUM(invoice_items.quantity * invoice_items.unit_price)/100 as total_revenue')
     .group(:id)
     .where('transactions.result = 0')
     .order('total_revenue desc')
@@ -32,6 +32,12 @@ class Merchant < ApplicationRecord
   end
 
   def top_sale_date_for_merchant
+    invoices.joins(:transactions)
+    .select('SUM(invoice_items.quantity * invoice_items.unit_price)/100 as total_revenue, invoices.created_at')
+    .where('transactions.result = 0')
+    .group('invoices.created_at')
+    .order('total_revenue desc')
+    .first
   end
 
   def items_on_invoice(id)
