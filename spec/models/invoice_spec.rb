@@ -31,7 +31,7 @@ RSpec.describe Invoice, type: :model do
 
     @invoice1 = @customer1.invoices.create!(status: 0)
     @invoice2 = @customer2.invoices.create!(status: 1)
-    @invoice3 = @customer3.invoices.create!(status: 2)
+    @invoice3 = @customer3.invoices.create!(status: 1)
     @invoice4 = @customer4.invoices.create!(status: 0)
     @invoice5 = @customer5.invoices.create!(status: 1)
     @invoice6 = @customer6.invoices.create!(status: 2)
@@ -49,9 +49,10 @@ RSpec.describe Invoice, type: :model do
     @invoice4.items << [@item4]
     @invoice5.items << [@item4]
 
-    @ii1 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item1.id, quantity: 2, status: 0)
-    @ii2 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item2.id, quantity: 1, status: 0)
-    @ii3 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item4.id, quantity: 1, status: 0)
+    @ii1 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item1.id, quantity: 2, status: 2)
+    @ii2 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item2.id, quantity: 1, status: 2)
+    @ii3 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item4.id, quantity: 1, status: 2)
+    @ii4 = InvoiceItem.create!(invoice_id: @invoice3.id, item_id: @item3.id, quantity: 7, unit_price: 500, status: 0)
   end
 
   describe 'class methods' do
@@ -63,8 +64,9 @@ RSpec.describe Invoice, type: :model do
 
     describe '::admin_incomplete_invoices' do
       it 'can find all the incomplete invoices listed by least recent created at date' do #returns only one 'completed' invoice (invoice6)
-       # expect(Invoice.admin_incomplete_invoices).to eq([@invoice1, @invoice2, @invoice4, @invoice5])
+       expect(Invoice.admin_incomplete_invoices).to eq([@invoice3])
      end
+    end
   end
 
   describe 'instance methods' do
@@ -77,6 +79,9 @@ RSpec.describe Invoice, type: :model do
     it 'can calculate total revenue for merchant' do
       expect(@invoice6.total_revenue(@merchant1.id)).to eq(70.00)
     end
+
+    it 'can calculate total invoice revenue' do
+      expect(@invoice3.total_invoice_revenue).to eq(35.00)
+    end
   end
-end
 end
