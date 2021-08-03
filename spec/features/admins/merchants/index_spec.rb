@@ -11,11 +11,11 @@ RSpec.describe 'Merchant Index', type: :feature do
 
     @customer_1 = Customer.create!(first_name: 'Joey', last_name: 'Ondricka')
 
-    @invoice_1 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}")
-    @invoice_2 = Invoice.create!(status: 1, customer_id: "#{@customer_1.id}")
-    @invoice_3 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}")
-    @invoice_4 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}")
-    @invoice_5 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}")
+    @invoice_1 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}", created_at: "Tuesday, August 03, 2021")
+    @invoice_2 = Invoice.create!(status: 1, customer_id: "#{@customer_1.id}", created_at: "Wednesday, August 04, 2021")
+    @invoice_3 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}", created_at: "Thursday, August 05, 2021")
+    @invoice_4 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}", created_at: "Friday, August 06, 2021")
+    @invoice_5 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}", created_at: "Saturday, August 07, 2021")
     @invoice_6 = Invoice.create!(status: 0, customer: @customer_1)
 
     @invoice_1.transactions.create!(credit_card_number: '4654405418249632', credit_card_expiration_date: "", result: 'success')
@@ -54,7 +54,7 @@ RSpec.describe 'Merchant Index', type: :feature do
     end
   end
 
-  it 'has an disable button for each merchant to modify status to disabled' do #within block still finding duplicate buttons if status is the same
+  it 'has an disable button for each merchant to modify status to disabled' do 
     within(:css, "##{@merchant_1.id}") do
 
       click_button 'Enable'
@@ -63,8 +63,7 @@ RSpec.describe 'Merchant Index', type: :feature do
     end
   end
 
-  it 'can group merchants by status' do #wrap both each blocks in a div to be able to test which merchants are appearing in each seciton
-
+  it 'can group merchants by status' do
     expect(@merchant_1.name).to_not appear_before('Disabled Merchants')
     expect(@merchant_2.name).to appear_before('Disabled Merchants')
   end
@@ -77,6 +76,16 @@ RSpec.describe 'Merchant Index', type: :feature do
       expect(@merchant_4.name).to appear_before(@merchant_5.name)
       expect(@merchant_5.name).to appear_before(@merchant_6.name)
       expect(page).to_not have_content(@merchant_1.name)
+    end
+  end
+
+  it 'can display the top sales date for merchant' do
+    within(:css, "#top_five") do
+      expect(@merchant_2.top_sale_date_for_merchant.created_at.strftime("%A, %B %d, %Y")).to eq("Tuesday, August 03, 2021")
+      expect(@merchant_3.top_sale_date_for_merchant.created_at.strftime("%A, %B %d, %Y")).to eq("Wednesday, August 04, 2021")
+      expect(@merchant_4.top_sale_date_for_merchant.created_at.strftime("%A, %B %d, %Y")).to eq("Thursday, August 05, 2021")
+      expect(@merchant_5.top_sale_date_for_merchant.created_at.strftime("%A, %B %d, %Y")).to eq("Friday, August 06, 2021")
+      expect(@merchant_6.top_sale_date_for_merchant.created_at.strftime("%A, %B %d, %Y")).to eq("Saturday, August 07, 2021")
     end
   end
 end
