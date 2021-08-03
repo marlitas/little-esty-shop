@@ -35,6 +35,6 @@ class Merchant < ApplicationRecord
   end
 
   def items_on_invoice(id)
-    invoice_items.select('items.name, items.unit_price, invoice_items.quantity, items.merchant_id, invoice_items.status').where('invoice_id = ?', id)
+    invoice_items.select('items.name, items.unit_price as item_price, invoice_items.*').where('invoice_id = ?', id)
   end
 end
