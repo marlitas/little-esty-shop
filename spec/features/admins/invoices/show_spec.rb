@@ -59,7 +59,6 @@ RSpec.describe 'Invoice Show page' do
   end
 
   it 'displays total revenue from this invoice' do
-    save_and_open_page
     expect(page).to have_content("Total Revenue")
     expect(page).to have_content(100.00)
   end
