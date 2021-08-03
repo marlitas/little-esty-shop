@@ -14,12 +14,14 @@
   <h4><%= item.name %></h4>
   <% item.invoice_items.each do |ii| %>
     <p>Quantity: <%= ii.quantity %>
-    <p>Unit Price: <%= ii.unit_price %>
+    <p>Unit Price: <%= number_to_currency(ii.unit_price_to_dollars) %>
     <p>Status: <%= ii.status %>
-    <%= ii.item_id %>
+    <p>ID: <%= ii.item_id %></p>
   <% end %>
   </div>
 <% end %>
+
+<h2 style="color:green;">Total Revenue: <%= number_to_currency(@invoice.total_invoice_revenue) %> </h2>
 
 <div id="status"><%= form_with url: admin_invoice_path(@invoice.id), method: :patch, local: true do |f| %>
 <%= f.select :status, [:cancelled, 'in progress', :completed], :value => @invoice.status %>
