@@ -33,4 +33,8 @@ class Merchant < ApplicationRecord
 
   def top_sale_date_for_merchant
   end
+
+  def items_on_invoice(id)
+    invoice_items.select('items.name, items.unit_price as item_price, invoice_items.*').where('invoice_id = ?', id)
+  end
 end
