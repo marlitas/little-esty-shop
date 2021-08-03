@@ -64,9 +64,17 @@ RSpec.describe 'Invoice show page' do
 
     it 'can update status of invoice with select field' do
       visit "/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}"
-      save_and_open_page
+
+      expect(page).to have_content(@ii1.status)
+
       within(:css, "##{@ii1.id}") do
         select('packaged')
+      end
+
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}")
+
+      within(:css, "##{@ii1.id}") do
+        expect(page).to have_content('packaged')
       end
     end
   end
