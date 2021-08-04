@@ -4,29 +4,19 @@
 <div class= "top-5-items">
 <% @merchant.items.top_5_items.each do |item| %>
   <p><%= link_to item.name, "/merchants/#{@merchant.id}/items/#{item.id}" %>, Revenue Generated: <%= item.total %></p>
-<% end %>
-</div>
-
-
-<% @merchant.items.each do |item| %>
-  <p><%= item.name %></p>
-  <p><%= item.description %></p>
-  <p><%= item.unit_price %></p>
-<% end %>
-<%= link_to 'Create a New Item', "/merchants/#{@merchant.id}/items/new" %>
-
-<div class= "top-5-items">
-<% @merchant.items.top_5_items.each do |item| %>
-  <p><%= link_to item.name, "/merchants/#{@merchant.id}/items/#{item.id}" %>, Revenue Generated: <%= item.total %></p>
   <p>Top selling date for <%= item.name %> was <%= item.best_day.strftime("%A, %B %d, %Y") %></p>
 <% end %>
 </div>
+
+<%= link_to 'Create a New Item', "/merchants/#{@merchant.id}/items/new" %>
 
 <div id="enabled">
   <h2>Enabled Items</h2>
   <% @merchant.items.enabled.each do |item| %>
     <div id= <%= "#{item.id}" %>>
       <p><%= link_to "#{item.name}", "/merchants/#{@merchant.id}/items/#{item.id}" %></p>
+      <p>Description: <%= item.description %></p>
+      <p>Unit Price: <%= item.unit_price %></p>
       <p>Status: <%= item.status %></p>
       <%= form_with url: "/merchants/#{@merchant.id}/items/#{item.id}?status=1", method: :patch, local: true do |f| %>
         <%= f.submit "Disable" %>
@@ -40,6 +30,8 @@
   <% @merchant.items.disabled.each do |item| %>
     <div id= <%= "#{item.id}" %>>
       <p><%= link_to "#{item.name}", "/merchants/#{@merchant.id}/items/#{item.id}" %></p>
+      <p>Description: <%= item.description %></p>
+      <p>Unit Price: <%= item.unit_price %></p>
       <p>Status: <%= item.status %></p>
       <%= form_with url: "/merchants/#{@merchant.id}/items/#{item.id}?status=0", method: :patch, local: true do |f| %>
         <%= f.submit "Enable" %>

@@ -66,9 +66,11 @@ RSpec.describe 'Merchant Items show page' do
 
     it 'can take you to the an items show page' do
       visit "merchants/#{@merchant1.id}/items"
+      within(:css, "##{@item1.id}") do
 
-      click_on(@item1.name)
+        click_on(@item1.name)
 
+      end
       expect(current_path).to eq("/merchants/#{@merchant1.id}/items/#{@item1.id}")
     end
 
@@ -78,6 +80,7 @@ RSpec.describe 'Merchant Items show page' do
 
       within(:css, "##{@item1.id}") do
         expect(page).to have_content('Status: enabled')
+        save_and_open_page
         click_on('Disable')
       end
 
