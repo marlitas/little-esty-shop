@@ -15,6 +15,9 @@ RSpec.describe Merchant, type: :model do
     @item2 = @merchant_1.items.create!(name: 'Toy Car', description: 'So fast', unit_price: 3000)
     @item3 = @merchant_1.items.create!(name: 'Bouncy Ball', description: 'So bouncy', unit_price: 500)
     @item4 = @merchant_2.items.create!(name: 'Dog Bone', description: 'So chewy', unit_price: 800)
+    @item5 = @merchant1.items.create!(name: 'Twist Tie', description: 'So twisty', unit_price: 100)
+    @item6 = @merchant1.items.create!(name: 'Snake-on-a-Rope', description: 'So squiggly', unit_price: 500)
+    @item7 = @merchant1.items.create!(name: 'Chonky Rat', description: 'So chonky', unit_price: 1000)
     @item_1 = @merchant_2.items.create!(name: 'item 1', description: 'item', unit_price: 1000)
     @item_2 = @merchant_3.items.create!(name: 'item 1', description: 'item', unit_price: 1000)
     @item_3 = @merchant_4.items.create!(name: 'item 1', description: 'item', unit_price: 1000)
@@ -102,6 +105,13 @@ RSpec.describe Merchant, type: :model do
         expect(@merchant_1.top_sale_date_for_merchant.created_at.strftime("%A, %B %d, %Y")).to eq("Tuesday, August 03, 2021")
       end
     end
+
+    describe '#top_5_items' do
+      it 'can display the top 5 items for a merchant' do
+
+      end
+    end
+
   end
 end
 end
