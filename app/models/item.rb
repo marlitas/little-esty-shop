@@ -25,18 +25,18 @@ class Item < ApplicationRecord
     where('status = ?', 1)
   end
 
+
   def best_day
     invoices.joins(:transactions)
     .select('invoices.created_at, SUM(invoice_items.quantity * invoice_items.unit_price) as total')
     .where('transactions.result = 0')
     .group('invoices.created_at')
     .order('total desc').first.created_at
-  end
-
-  def self.top_items(merchant_id) #temporary method to test best days on view
-    joins(invoices: :transactions)
+  end 
+  
+  def self.top_5_items
+    Item.joins(invoices: :transactions)
     .select('items.id, items.name, SUM(invoice_items.quantity * invoice_items.unit_price) as total')
-    .where('merchant_id = ?', merchant_id)
     .where('transactions.result = 0')
     .group('items.id')
     .order('total desc')
