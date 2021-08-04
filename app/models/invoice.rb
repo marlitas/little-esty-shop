@@ -11,12 +11,8 @@ class Invoice < ApplicationRecord
     .joins(:invoice_items)
     .where('invoice_items.status != 2')
     .order(:created_at)
-    .uniq
+    .distinct
   end
-
-
-
-  #Merchant.select('merchants.*', 'transactions.result', 'invoices.*').joins(:transactions) -- method to get top 5 revenue merchants
 
   def self.merchant_invoices(id)
     joins(:items)
@@ -32,4 +28,7 @@ class Invoice < ApplicationRecord
     merchant_items(merchant_id).sum('quantity * items.unit_price') / 100.00
   end
 
+  def total_invoice_revenue
+    invoice_items.sum('invoice_items.unit_price * invoice_items.quantity') / 100.00
+  end
 end

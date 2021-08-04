@@ -5,20 +5,23 @@
 <h2>Invoice #<%= @invoice.id %></h2>
 <p>Status: <%= @invoice.status %></p>
 <p>Created At: <%= @invoice.created_at.strftime("%A, %B %d, %Y") %></p>
-<%# <%= @invoice.customer_id.first_name %>
-<%# <%= @invoice.customer_id.last_name %>
+<%= Customer.find(@invoice.customer_id).first_name %> <%= Customer.find(@invoice.customer_id).last_name %>
+
 
 <h3>Invoice Items</h3>
 <% @invoice.items.each do |item| %>
+<div id=<%= "#{item.id}"%>>
   <h4><%= item.name %></h4>
-  <%# <% item.invoice_items.each do |ii| %>
-    <%# <!-- <p>Quantity: <%= ii.quantity %>
-    <%# <!-- <p>Unit Price: <%= ii.unit_price %>
-    <%# <!-- <p>Status: <%= ii.status %>
-    <%# <%= ii.item_id %>
-  <%# <% end %>
+  <% item.invoice_items.each do |ii| %>
+    <p>Quantity: <%= ii.quantity %>
+    <p>Unit Price: <%= number_to_currency(ii.unit_price_to_dollars) %>
+    <p>Status: <%= ii.status %>
+    <p>ID: <%= ii.item_id %></p>
+  <% end %>
+  </div>
 <% end %>
 
+<h2 style="color:green;">Total Revenue: <%= number_to_currency(@invoice.total_invoice_revenue) %> </h2>
 
 <div id="status"><%= form_with url: admin_invoice_path(@invoice.id), method: :patch, local: true do |f| %>
 <%= f.select :status, [:cancelled, 'in progress', :completed], :value => @invoice.status %>
