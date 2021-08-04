@@ -23,7 +23,7 @@ RSpec.describe 'Merchant Items show page' do
     @invoice4 = @customer4.invoices.create!(status: 2)
     @invoice5 = @customer5.invoices.create!(status: 2)
     @invoice6 = @customer6.invoices.create!(status: 2)
-    @invoice7 = @customer5.invoices.create!(status: 1)
+    @invoice7 = @customer5.invoices.create!(status: 1, created_at: "2012-03-20 09:54:09 UTC")
 
     @transaction1 = @invoice5.transactions.create!(credit_card_number: "0123456789", credit_card_expiration_date: '12/31', result: 0)
     @transaction2 = @invoice5.transactions.create!(credit_card_number: "9876543210", credit_card_expiration_date: '01/01', result: 0)
@@ -44,12 +44,14 @@ RSpec.describe 'Merchant Items show page' do
     @transaction17 = @invoice3.transactions.create!(credit_card_number: "7894739999", credit_card_expiration_date: '04/20', result: 1)
     @transaction18 = @invoice3.transactions.create!(credit_card_number: "7894739999", credit_card_expiration_date: '04/20', result: 1)
 
-    @invoice1.items << [@item1]
-    @invoice2.items << [@item1]
-    @invoice3.items << [@item1]
-    @invoice4.items << [@item2]
-    @invoice5.items << [@item2]
-    @invoice6.items << [@item1]
+    @ii1 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item1.id, status: 0, quantity: 1, unit_price: 2000)
+    @ii2 = InvoiceItem.create!(invoice_id: @invoice2.id, item_id: @item1.id, status: 0, quantity: 1, unit_price: 2000)
+    @ii3 = InvoiceItem.create!(invoice_id: @invoice3.id, item_id: @item1.id, status: 0, quantity: 1, unit_price: 2000)
+    @ii4 = InvoiceItem.create!(invoice_id: @invoice4.id, item_id: @item2.id, status: 0, quantity: 1, unit_price: 30000)
+    @ii5 = InvoiceItem.create!(invoice_id: @invoice5.id, item_id: @item2.id, status: 0, quantity: 1, unit_price: 30000)
+    @ii6 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item1.id, status: 0, quantity: 1, unit_price: 2000)
+    @ii7 = InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item1.id, status: 0, quantity: 5, unit_price: 1800)
+    @ii8 = InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item1.id, status: 0, quantity: 6, unit_price: 2000)
   end
 
   describe 'merchant' do
@@ -90,7 +92,7 @@ RSpec.describe 'Merchant Items show page' do
 
       within(:css, "##{@item1.id}") do
         expect(page).to have_content('Status: enabled')
-      end  
+      end
     end
 
     it 'displays items by their status' do
@@ -110,6 +112,12 @@ RSpec.describe 'Merchant Items show page' do
         expect(page).to have_content(@item2.name)
         expect(page).to_not have_content(@item1.name)
       end
+    end
+
+    it 'displays top selling date of top items' do
+      visit "merchants/#{@merchant1.id}/items"
+
+      expect(page).to have_content("Top selling date for #{@item1.name} was #{@item1.created_at.strftime('%A, %B %d, %Y')}")
     end
   end
 end

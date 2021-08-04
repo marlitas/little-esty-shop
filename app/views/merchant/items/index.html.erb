@@ -15,6 +15,13 @@
 <% end %>
 <%= link_to 'Create a New Item', "/merchants/#{@merchant.id}/items/new" %>
 
+<div class= "top-5-items">
+<% @merchant.items.top_5_items.each do |item| %>
+  <p><%= link_to item.name, "/merchants/#{@merchant.id}/items/#{item.id}" %>, Revenue Generated: <%= item.total %></p>
+  <p>Top selling date for <%= item.name %> was <%= item.best_day.strftime("%A, %B %d, %Y") %></p>
+<% end %>
+</div>
+
 <div id="enabled">
   <h2>Enabled Items</h2>
   <% @merchant.items.enabled.each do |item| %>

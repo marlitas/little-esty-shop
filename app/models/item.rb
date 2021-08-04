@@ -25,6 +25,15 @@ class Item < ApplicationRecord
     where('status = ?', 1)
   end
 
+
+  def best_day
+    invoices.joins(:transactions)
+    .select('invoices.created_at, SUM(invoice_items.quantity * invoice_items.unit_price) as total')
+    .where('transactions.result = 0')
+    .group('invoices.created_at')
+    .order('total desc').first.created_at
+  end 
+  
   def self.top_5_items
     Item.joins(invoices: :transactions)
     .select('items.id, items.name, SUM(invoice_items.quantity * invoice_items.unit_price) as total')
