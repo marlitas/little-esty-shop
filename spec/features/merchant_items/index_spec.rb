@@ -80,7 +80,7 @@ RSpec.describe 'Merchant Items show page' do
 
       within(:css, "##{@item1.id}") do
         expect(page).to have_content('Status: enabled')
-        save_and_open_page
+        
         click_on('Disable')
       end
 
