@@ -16,6 +16,9 @@ RSpec.describe 'merchant items index page' do
     @item2 = @merchant1.items.create!(name: 'Toy Car', description: 'So fast', unit_price: 30000)
     @item3 = @merchant1.items.create!(name: 'Bouncy Ball', description: 'So bouncy', unit_price: 5000)
     @item4 = @merchant1.items.create!(name: 'Dog Bone', description: 'So chewy', unit_price: 8000)
+    @item5 = @merchant1.items.create!(name: 'Twist Tie', description: 'So twisty', unit_price: 100)
+    @item6 = @merchant1.items.create!(name: 'Snake-on-a-Rope', description: 'So squiggly', unit_price: 500)
+    @item7 = @merchant1.items.create!(name: 'Chonky Rat', description: 'So chonky', unit_price: 1000)
 
     @invoice1 = @customer1.invoices.create!(status: 2)
     @invoice2 = @customer2.invoices.create!(status: 2)
@@ -50,16 +53,15 @@ RSpec.describe 'merchant items index page' do
     @invoice4.items << [@item2]
     @invoice5.items << [@item2]
     @invoice6.items << [@item1]
+
+    @ii1 = InvoiceItem.create!(quantity: 4, unit_price: 2000, status: 0, invoice: @invoice1, item: @item1 ) #8000
+    @ii2 = InvoiceItem.create!(quantity: 1, unit_price: 30000, status: 0, invoice: @invoice1, item: @item2 ) #30000
+    @ii3 = InvoiceItem.create!(quantity: 2, unit_price: 5000, status: 0, invoice: @invoice1, item: @item3 ) #10000
+    @ii4 = InvoiceItem.create!(quantity: 2, unit_price: 8000, status: 0, invoice: @invoice1, item: @item4 ) #16000
+    @ii5 = InvoiceItem.create!(quantity: 6, unit_price: 100, status: 0, invoice: @invoice1, item: @item5 ) #600
+    @ii6 = InvoiceItem.create!(quantity: 19, unit_price: 500, status: 0, invoice: @invoice1, item: @item6 ) #9500
+    @ii7 = InvoiceItem.create!(quantity: 50, unit_price: 1000, status: 0, invoice: @invoice1, item: @item7 ) #50000
   end
-  # Merchant Item Create
-  # As a merchant x
-  # When I visit my items index page x
-  # I see a link to create a new item. x
-  # When I click on the link, x
-  # I am taken to a form that allows me to add item information. x
-  # When I fill out the form I click ‘Submit’ x
-  # Then I am taken back to the items index page x
-  # And I see the item I just created displayed in the list of items. x
 
   describe 'as a merchant when i visit my items index page' do
     it 'can create an item by interacting with a form' do
@@ -76,11 +78,35 @@ RSpec.describe 'merchant items index page' do
       fill_in "Unit Price", with: 699
       click_on "Submit"
       expect(current_path).to eq("/merchants/#{@merchant1.id}/items")
-      save_and_open_page
       #dane, 8.1: is there a test i can insert where the page can test if the last item's attributes are a specific thing?
       expect(page).to have_content("Chewbacca Chew Toy")
       expect(page).to have_content("So Chewy")
       expect(page).to have_content(699)
+    end
+
+    # Merchant Items Index: 5 most popular items
+    # As a merchant
+    # When I visit my items index page
+    # Then I see the names of the top 5 most popular items ranked by total revenue generated
+    # And I see that each item name links to my merchant item show page for that item
+    # And I see the total revenue generated next to each item name
+    # Notes on Revenue Calculation:
+    # - Only invoices with at least one successful transaction should count towards revenue
+    # - Revenue for an invoice should be calculated as the sum of the revenue of all invoice items
+    # - Revenue for an invoice item should be calculated as the invoice item unit price multiplied by the quantity (do not use the item unit price)
+
+    it 'can create and display top 5 merchant items' do
+      visit "/merchants/#{@merchant1.id}/items"
+      within(:css, ".top-5-items") do
+
+        expect(page).to_not have_content(@item1.name)
+        expect(page).to_not have_content(@item5.name)
+        expect(@item7.name).to appear_before(@item2.name)
+        expect(@item2.name).to appear_before(@item4.name)
+        expect(@item4.name).to appear_before(@item3.name)
+        expect(@item3.name).to appear_before(@item6.name)
+
+      end
     end
   end
 end
