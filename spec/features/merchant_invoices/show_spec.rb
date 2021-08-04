@@ -18,10 +18,10 @@ RSpec.describe 'Invoice show page' do
     @transaction1 = @invoice1.transactions.create!(credit_card_number: "0123456789", credit_card_expiration_date: '12/31', result: 0)
     @transaction2 = @invoice1.transactions.create!(credit_card_number: "9876543210", credit_card_expiration_date: '01/01', result: 1)
 
-    @ii1 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item1.id, quantity: 2, status: 0)
-    @ii2 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item2.id, quantity: 5, status: 1)
-    @ii3 = InvoiceItem.create!(invoice_id: @invoice2.id, item_id: @item3.id, quantity: 8, status: 2)
-    @ii4 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item4.id, quantity: 6, status: 2)
+    @ii1 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item1.id, quantity: 2, status: 'pending', unit_price: 2000)
+    @ii2 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item2.id, quantity: 5, status: 'packaged', unit_price: 2000)
+    @ii3 = InvoiceItem.create!(invoice_id: @invoice2.id, item_id: @item3.id, quantity: 8, status: 'shipped', unit_price: 2000)
+    @ii4 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item4.id, quantity: 6, status: 'shipped', unit_price: 2000)
   end
 
   describe 'merchant' do
@@ -60,6 +60,22 @@ RSpec.describe 'Invoice show page' do
       visit "/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}"
 
       expect(page).to have_content("$#{@invoice1.total_revenue(@merchant1.id)}")
+    end
+
+    it 'can update status of invoice with select field' do
+      visit "/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}"
+
+      expect(page).to have_content(@ii1.status)
+
+      within(:css, "##{@ii1.id}") do
+        select('packaged')
+      end
+
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}")
+
+      within(:css, "##{@ii1.id}") do
+        expect(page).to have_content('packaged')
+      end
     end
   end
 end
