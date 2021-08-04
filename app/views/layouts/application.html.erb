@@ -8,8 +8,18 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-
-  <body>
-    <%= yield %>
-  </body>
+  <div class="container">
+    <nav>
+      <%= link_to 'Admin Dashboard', "/admin" %>
+      <%= link_to 'Merchant Dashboard', "/merchants"  %>
+    </nav>
+    <body>
+      <%= yield %>
+      <footer>
+        <p>github repo: <%= @repo.name %></p>
+        <p>contributor commits: </p>
+        <p>contributor merged PRs: </p>
+      </footer>
+    </body>
+  </div>
 </html>
