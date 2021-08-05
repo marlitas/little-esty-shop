@@ -14,15 +14,15 @@
       <%= link_to 'Merchant Dashboard', "/merchants"  %>
     </nav>
     <body>
-      <%= yield %>
-      <footer>
-        <p>github repo: <%= @repo.name %></p>
-        <% @contributors.each do |contributor| %>
-          <p><%= contributor.user_name %></p>
-          <p>contributor commits: <%= contributor.contributions %></p>
-        <% end %>
-        <p>Total Merged PRs: <%= @pull_count %> </p>
-      </footer>
+        <%= yield %>
+        <footer>
+          <p>github repo: <%= @repo.name %></p>
+          <% @contributors[1..4].each do |contributor| %>
+            <p><%= contributor.user_name %></p>
+            <p>commits: <%= contributor.contributions %></p>
+          <% end %>
+          <p>Total Merged PRs: <%= @pull_count %> </p>
+        </footer>
     </body>
   </div>
 </html>
