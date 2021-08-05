@@ -1,5 +1,12 @@
 # Little Esty Shop
 
+Little Esty Shop is a fictitious e-commerce site that uses ActiveRecord/SQL queries to interact with a PostgreSQL database. This project was used as a way to explore CRUD functionality, Rails MVC principles, and many-to-many relationships. Little Esty Shop provided hands on practice with BE database creation and manipulation. The collaborators on this project divided into two teams to develop an admin portion and merchant(user) portion of the site. The team used Github and Git workflows, as well as Github Projects to maintain consistency across the project. 
+
+** Project Duration: 9 days **
+
+## Schema:
+
+
 ## Background and Description
 
 "Little Esty Shop" is a group project that requires students to build a fictitious e-commerce platform where merchants and admins can manage inventory and fulfill customer invoices.
