@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :repo_fetch
-  before_action :pull_count
-  before_action :contributor_fetch
+  #before_action :pull_count
+  #before_action :contributor_fetch
 
   def repo_fetch
     json = GithubService.new.repo_name
