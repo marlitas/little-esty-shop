@@ -17,8 +17,11 @@
       <%= yield %>
       <footer>
         <p>github repo: <%= @repo.name %></p>
-        <p>contributor commits: </p>
-        <p>contributor merged PRs: </p>
+        <% @contributors.each do |contributor| %>
+          <p><%= contributor.user_name %></p>
+          <p>contributor commits: <%= contributor.contributions %></p>
+        <% end %>
+        <p>Total Merged PRs: <%= @pull_count %> </p>
       </footer>
     </body>
   </div>
