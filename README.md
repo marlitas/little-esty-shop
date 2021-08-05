@@ -5,6 +5,7 @@ Little Esty Shop is a fictitious e-commerce site that uses ActiveRecord/SQL quer
 ** Project Duration: 9 days **
 
 ## Schema:
+![Little_Esty_Shop](https://user-images.githubusercontent.com/42476338/128379019-4b6a28ff-d263-4d2d-8608-7f4a98c0c508.png)
 
 
 ## Background and Description
