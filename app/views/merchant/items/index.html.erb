@@ -10,6 +10,11 @@
 
 <%= link_to 'Create a New Item', "/merchants/#{@merchant.id}/items/new" %>
 
+<!-- Temporary iteration to test best days functionality -->
+<% Item.top_items(@merchant.id).each do |item| %>
+  <p>Top selling date for <%= item.name %> was <%= item.best_day.strftime("%A, %B %d, %Y") %></p>
+<% end %>
+
 <div id="enabled">
   <h2>Enabled Items</h2>
   <% @merchant.items.enabled.each do |item| %>
