@@ -7,4 +7,13 @@ class Merchant::DiscountsController < ApplicationController
       Holiday.new(holiday)
     end
   end
+
+  def new
+
+  end
+
+  def destroy
+    Discount.find(params[:id]).destroy
+    redirect_to "/merchants/#{params[:merchant_id]}/discounts"
+  end
 end

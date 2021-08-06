@@ -14,6 +14,27 @@ RSpec.describe 'Discount Index' do
     allow_any_instance_of(Holiday).to receive(:date).and_return('2021-12-24')
   end
 
+  describe 'links' do
+    it 'directs you to new discount' do
+      visit "/merchants/#{@merchant1.id}/discounts"
+      click_on('Add New Discount')
+
+      expect(curren_path).to eq("merchants/#{@merchant1.id}/discounts/new")
+    end
+
+    it 'can delete a discount' do
+      visit "/merchants/#{@merchant1.id}/discounts"
+      expect(page).to have_content(@discount1.id)
+
+      within(:css, "##{@discount1.id}") do
+        click_on('Delete Discount')
+      end
+
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts")
+      expect(page).to_not have_content(@discount1.id)
+    end
+  end
+
   describe 'merchant' do
     it 'displays discounts merchant has' do
       visit "/merchants/#{@merchant1.id}/discounts"
