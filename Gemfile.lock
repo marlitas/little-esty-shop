@@ -77,6 +77,11 @@ GEM
     docile (1.4.0)
     erubi (1.10.0)
     execjs (2.8.1)
+    factory_bot (6.2.0)
+      activesupport (>= 5.0.0)
+    factory_bot_rails (6.2.0)
+      factory_bot (~> 6.2.0)
+      railties (>= 5.0.0)
     faraday (1.6.0)
       faraday-em_http (~> 1.0)
       faraday-em_synchrony (~> 1.0)
@@ -117,13 +122,11 @@ GEM
     marcel (1.0.1)
     method_source (1.0.0)
     mini_mime (1.1.0)
-    mini_portile2 (2.6.1)
     minitest (5.14.4)
     msgpack (1.4.2)
     multipart-post (2.1.1)
     nio4r (2.5.8)
-    nokogiri (1.12.2)
-      mini_portile2 (~> 2.6.1)
+    nokogiri (1.12.2-x86_64-darwin)
       racc (~> 1.4)
     orderly (0.1.1)
       capybara (>= 1.1)
@@ -251,13 +254,14 @@ GEM
       nokogiri (~> 1.8)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-20
 
 DEPENDENCIES
   bootsnap (>= 1.1.0)
   bootstrap (~> 5.0.1)
   capybara
   coffee-rails (~> 4.2)
+  factory_bot_rails
   faraday
   jbuilder (~> 2.5)
   launchy
