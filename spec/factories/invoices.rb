@@ -1,24 +1,16 @@
 FactoryBot.define do
   factory :invoice do
-    created_at { 1.day.ago }
-    customer
-
-    trait :cancelled do
-      status :cancelled
-    end
-
-    trait :in_progress do
-      status 'in progress'
-    end
-
-    trait :completed do
-      status 'completed'
-    end
+    status { 1 }
+    association :customer, factory: :customer
   end
-end
 
-def customer_with_invoice(invoices_count: 5)
-  FactoryBot.create(:customer) do |customer|
-    FactoryBot.create_list(:invoice, invoices_count, customer: customer)
+  factory :cancelled_invoice do
+    status { 0 }
+    association :customer, factory: :customer
+  end
+
+  factory :completed_invoice do
+    status { 2 }
+    association :customer, factory: :customer
   end
 end

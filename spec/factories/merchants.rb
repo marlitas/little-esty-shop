@@ -1,13 +1,11 @@
 FactoryBot.define do
-  factory :merchant do
-    name {'Sparkys Shop'}
+  factory :merchant, class: Merchant do
+    name {Faker::DcComics.hero}
+    status { true }
+  end
 
-    trait :enabled do
-      status true
-    end
-
-    trait :disabled do
-      status false
-    end
+  factory :disabled_merchant, class: Merchant do
+    name { Faker::DcComics.name }
+    status { false }
   end
 end

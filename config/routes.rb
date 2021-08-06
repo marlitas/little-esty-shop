@@ -5,7 +5,8 @@ Rails.application.routes.draw do
     resources :items
     resources :invoices
     resources :invoice_items
-    get '/dashboard', to: 'merchants#dashboard'
+    resources :discounts
+    # get '/dashboard', to: 'merchants#dashboard'
   end
 
   resources :items, only: [:edit, :update, :new, :create]
