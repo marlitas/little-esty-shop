@@ -10,15 +10,10 @@ RSpec.describe 'Discount Index' do
     @discount3 = create(:discount_low, merchant: @merchant1)
     @discount4 = create(:discount, merchant: @merchant2 )
 
+    allow_any_instance_of(Holiday).to receive(:name).and_return('Christmas Day')
+    allow_any_instance_of(Holiday).to receive(:date).and_return('2021-12-24')
   end
-  # As a merchant
-  # When I visit my merchant dashboard
-  # Then I see a link to view all my discounts
-  # When I click this link
-  # Then I am taken to my bulk discounts index page
-  # Where I see all of my bulk discounts including their
-  # percentage discount and quantity thresholds
-  # And each bulk discount listed includes a link to its show page
+
   describe 'merchant' do
     it 'displays discounts merchant has' do
       visit "/merchants/#{@merchant1.id}/discounts"
@@ -34,6 +29,14 @@ RSpec.describe 'Discount Index' do
       expect(page).to have_content(@discount3.quantity_threshold)
 
       expect(page).to_not have_content(@discount4.id)
+    end
+
+    it 'displays upcoming holidays' do
+      visit "/merchants/#{@merchant1.id}/discounts"
+
+      expect(page).to have_content('Upcoming Holidays')
+      expect(page).to have_content('Christmas Day')
+      expect(page).to have_content('2021-12-24')
     end
   end
 end

@@ -5,3 +5,9 @@
 <p>Perfcent off: %<%= discount.percent %> </p>
 <p>quantity_threshold: <%= discount.quantity_threshold %> </p>
 <% end %>
+
+<h2>Upcoming Holidays</h2>
+<% @holidays.each do |holiday| %>
+  <p> <%= holiday.name %> </p>
+  <p> <%= holiday.date %> </p>
+<% end %>
