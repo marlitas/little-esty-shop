@@ -5,9 +5,9 @@ RSpec.describe 'Discount Index' do
     @merchant1 = create(:merchant)
     @merchant2 = create(:disabled_merchant)
 
-    @discount1 = create(:discount_high)
-    @discount2 = create(:discount_medium)
-    @discount3 = create(:discount_low)
+    @discount1 = create(:discount_high, merchant: @merchant1)
+    @discount2 = create(:discount_medium, merchant: @merchant1)
+    @discount3 = create(:discount_low, merchant: @merchant1)
     @discount4 = create(:discount, merchant: @merchant2 )
 
   end

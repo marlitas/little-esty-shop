@@ -52,26 +52,8 @@ RSpec.describe 'merchant dashboard page' do
     @invoice6.items << [@item1]
   end
 
-
-  describe 'merchant' do
-    it 'can display merchant name' do
-      # Merchant Dashboard
-      #
-      # As a merchant,
-      # When I visit my merchant dashboard (/merchants/merchant_id/dashboard)
-      # Then I see the name of my merchant
-      visit "/merchants/#{@merchant1.id}/dashboard"
-
-      expect(page).to have_content(@merchant1.name)
-      expect(page).to_not have_content(@merchant2.name)
-    end
-
+  describe 'links' do
     it 'link to items' do
-      # Merchant Dashboard Links
-      # As a merchant,
-      # When I visit my merchant dashboard
-      # Then I see link to my merchant items index (/merchants/merchant_id/items)
-      # And I see a link to my merchant invoices index (/merchants/merchant_id/invoices)
       visit "/merchants/#{@merchant1.id}/dashboard"
 
       expect(page).to have_content('My Items')
@@ -89,14 +71,40 @@ RSpec.describe 'merchant dashboard page' do
       expect(current_path).to eq("/merchants/#{@merchant1.id}/invoices")
     end
 
+    it 'link to discounts' do
+      visit "/merchants/#{@merchant1.id}/dashboard"
 
-    # Merchant Dashboard Statistics - Favorite Customers
-    # As a merchant,
-    # When I visit my merchant dashboard
-    # Then I see the names of the top 5 customers
-    # who have conducted the largest number of successful transactions with my merchant
-    # And next to each customer name I see the number of successful transactions they have
-    # conducted with my merchant
+      expect(page).to have_content('My Discounts')
+
+      click_on 'My Discounts'
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts")
+    end
+
+    it 'links to each items invoice' do
+      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item3.id, status: 1, created_at: "2012-03-25 09:54:09 UTC")
+      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item4.id, status: 1, created_at: "2012-03-24 09:54:09 UTC")
+      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item1.id, status: 2)
+      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item2.id, status: 1, created_at: "2012-03-23 09:54:09 UTC")
+
+      visit "/merchants/#{@merchant1.id}/dashboard"
+
+      within(:css, "##{@item3.id}") do
+      click_on("#{@invoice7.id}")
+      end
+
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/invoices/#{@invoice7.id}")
+    end
+  end
+
+
+  describe 'merchant' do
+    it 'can display merchant name' do
+      visit "/merchants/#{@merchant1.id}/dashboard"
+
+      expect(page).to have_content(@merchant1.name)
+      expect(page).to_not have_content(@merchant2.name)
+    end
+
     it 'displays top 5 customers' do
       visit "/merchants/#{@merchant1.id}/dashboard"
 
@@ -132,21 +140,6 @@ RSpec.describe 'merchant dashboard page' do
       expect(page).to have_content("Invoice ID: #{@invoice7.id}")
       expect(page).to_not have_content("#{@item1.name} Invoice ID: #{@invoice7.id}")
       expect(page).to_not have_content("#{@item2.name} Invoice ID: #{@invoice7.id}")
-    end
-
-    it 'links to each items invoice' do
-      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item3.id, status: 1, created_at: "2012-03-25 09:54:09 UTC")
-      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item4.id, status: 1, created_at: "2012-03-24 09:54:09 UTC")
-      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item1.id, status: 2)
-      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item2.id, status: 1, created_at: "2012-03-23 09:54:09 UTC")
-
-      visit "/merchants/#{@merchant1.id}/dashboard"
-
-      within(:css, "##{@item3.id}") do
-      click_on(@invoice7.id)
-      end
-
-      expect(current_path).to eq("/merchants/#{@merchant1.id}/invoices/#{@invoice7.id}")
     end
 
     it 'sorts by item created at and formats properly' do
