@@ -13,10 +13,17 @@ class Merchant::DiscountsController < ApplicationController
   end
 
   def create
+    Discount.create!(percent: params[:discount][:percent], quantity_threshold: params[:discount][:quantity_threshold], merchant_id: params[:merchant_id])
+
+    redirect_to "/merchants/#{params[:merchant_id]}/discounts"
   end
 
   def destroy
     Discount.find(params[:id]).destroy
     redirect_to "/merchants/#{params[:merchant_id]}/discounts"
+  end
+
+  def discount_params
+    params.permit( :merchant_id)
   end
 end
