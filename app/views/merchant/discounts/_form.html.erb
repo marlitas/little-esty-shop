@@ -1,0 +1,7 @@
+<%= form_with model: [:merchant, @discount] do |form| %>
+  <%= form.label :percent, 'Percent' %>
+  <%= form.number_field :percent %>
+  <%= form.label :quantity_threshold, 'Quantity Threshold' %>
+  <%= form.number_field :quantity_threshold %>
+  <%= form.submit %>
+<% end %>

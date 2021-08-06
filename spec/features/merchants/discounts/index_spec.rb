@@ -19,7 +19,7 @@ RSpec.describe 'Discount Index' do
       visit "/merchants/#{@merchant1.id}/discounts"
       click_on('Add New Discount')
 
-      expect(curren_path).to eq("merchants/#{@merchant1.id}/discounts/new")
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts/new")
     end
 
     it 'can delete a discount' do

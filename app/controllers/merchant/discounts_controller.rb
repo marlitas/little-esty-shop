@@ -9,7 +9,10 @@ class Merchant::DiscountsController < ApplicationController
   end
 
   def new
+    @discount = Discount.new
+  end
 
+  def create
   end
 
   def destroy
