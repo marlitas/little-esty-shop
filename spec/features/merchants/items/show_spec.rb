@@ -51,19 +51,17 @@ RSpec.describe 'merchant items show page' do
     @invoice5.items << [@item2]
     @invoice6.items << [@item1]
   end
-  # Merchant Item Update
-  # As a merchant,
-  # When I visit the merchant show page of an item x
-  # I see a link to update the item information. x
-  # When I click the link x
-  # Then I am taken to a page to edit this item x
-  # And I see a form filled in with the existing item attribute information x
-  # When I update the information in the form and I click ‘submit’ x
-  # Then I am redirected back to the item show page where I see the updated information x
-  # And I see a flash message stating that the information has been successfully updated. x
 
   describe 'as a merchant' do
     describe 'when i visit the merchant show page of an item' do
+      it 'displays item and its attributes' do
+        visit "/merchants/#{@merchant1.id}/items/#{@item1.id}"
+
+        expect(page).to have_content(@item1.name)
+        expect(page).to have_content(@item1.description)
+        expect(page).to have_content("$#{@item1.price_to_dollars}")
+      end
+      
       it 'can see a link to update the item information' do
         visit "/merchants/#{@merchant1.id}/items/#{@item1.id}"
 
