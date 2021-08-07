@@ -26,7 +26,7 @@ RSpec.describe 'merchant items index page' do
     @invoice4 = @customer4.invoices.create!(status: 2)
     @invoice5 = @customer5.invoices.create!(status: 2)
     @invoice6 = @customer6.invoices.create!(status: 2)
-    @invoice7 = @customer5.invoices.create!(status: 1)
+    @invoice7 = @customer5.invoices.create!(status: 1, created_at: "2012-03-20 09:54:09 UTC")
 
     @transaction1 = @invoice5.transactions.create!(credit_card_number: "0123456789", credit_card_expiration_date: '12/31', result: 0)
     @transaction2 = @invoice5.transactions.create!(credit_card_number: "9876543210", credit_card_expiration_date: '01/01', result: 0)
@@ -62,8 +62,29 @@ RSpec.describe 'merchant items index page' do
     @ii6 = InvoiceItem.create!(quantity: 19, unit_price: 500, status: 0, invoice: @invoice1, item: @item6 ) #9500
     @ii7 = InvoiceItem.create!(quantity: 50, unit_price: 1000, status: 0, invoice: @invoice1, item: @item7 ) #50000
   end
+  describe 'links' do
+    it 'can take you to the an items show page' do
+      visit "merchants/#{@merchant1.id}/items"
+      within(:css, "##{@item1.id}") do
+
+        click_on(@item1.name)
+
+      end
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/items/#{@item1.id}")
+    end
+  end
 
   describe 'as a merchant when i visit my items index page' do
+
+    it 'displays all the merchants items' do
+      visit "merchants/#{@merchant1.id}/items"
+
+      expect(page).to have_content(@item1.name)
+      expect(page).to have_content(@item2.name)
+      expect(page).to have_content(@item3.name)
+      expect(page).to_not have_content(@item4.name)
+    end
+
     it 'can create an item by interacting with a form' do
       visit "/merchants/#{@merchant1.id}/items"
 
@@ -78,22 +99,10 @@ RSpec.describe 'merchant items index page' do
       fill_in "Unit Price", with: 699
       click_on "Submit"
       expect(current_path).to eq("/merchants/#{@merchant1.id}/items")
-      #dane, 8.1: is there a test i can insert where the page can test if the last item's attributes are a specific thing?
       expect(page).to have_content("Chewbacca Chew Toy")
       expect(page).to have_content("So Chewy")
       expect(page).to have_content(699)
     end
-
-    # Merchant Items Index: 5 most popular items
-    # As a merchant
-    # When I visit my items index page
-    # Then I see the names of the top 5 most popular items ranked by total revenue generated
-    # And I see that each item name links to my merchant item show page for that item
-    # And I see the total revenue generated next to each item name
-    # Notes on Revenue Calculation:
-    # - Only invoices with at least one successful transaction should count towards revenue
-    # - Revenue for an invoice should be calculated as the sum of the revenue of all invoice items
-    # - Revenue for an invoice item should be calculated as the invoice item unit price multiplied by the quantity (do not use the item unit price)
 
     it 'can create and display top 5 merchant items' do
       visit "/merchants/#{@merchant1.id}/items"
@@ -106,6 +115,55 @@ RSpec.describe 'merchant items index page' do
         expect(@item4.name).to appear_before(@item3.name)
         expect(@item3.name).to appear_before(@item6.name)
 
+      end
+    end
+
+    it 'displays top selling date of top items' do
+      visit "merchants/#{@merchant1.id}/items"
+
+      expect(page).to have_content("Top selling date for #{@item1.name} was #{@item1.created_at.strftime('%A, %B %d, %Y')}")
+    end
+
+    it 'displays items by their status' do
+      @item1.update!(status: 0)
+      @item2.update!(status: 1)
+
+      visit "merchants/#{@merchant1.id}/items"
+
+      within(:css, "#enabled") do
+        expect(page).to have_content('Enabled Items')
+        expect(page).to have_content(@item1.name)
+        expect(page).to_not have_content(@item2.name)
+      end
+
+      within(:css, "#disabled") do
+        expect(page).to have_content('Disabled Items')
+        expect(page).to have_content(@item2.name)
+        expect(page).to_not have_content(@item1.name)
+      end
+    end
+
+    it 'can enable and disable items' do
+      @item1.update!(status: 0)
+      visit "merchants/#{@merchant1.id}/items"
+
+      within(:css, "##{@item1.id}") do
+        expect(page).to have_content('Status: enabled')
+
+        click_on('Disable')
+      end
+
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/items")
+
+      within(:css, "##{@item1.id}") do
+        expect(page).to have_content('Status: disabled')
+        click_on('Enable')
+      end
+
+      expect(current_path).to eq("/merchants/#{@merchant1.id}/items")
+
+      within(:css, "##{@item1.id}") do
+        expect(page).to have_content('Status: enabled')
       end
     end
   end
