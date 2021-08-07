@@ -24,7 +24,6 @@ RSpec.describe 'New Discount' do
 
       expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts")
 
-      save_and_open_page
       expect(page).to have_content('16')
       expect(page).to have_content('40')
     end

@@ -8,6 +8,14 @@ class Merchant::DiscountsController < ApplicationController
     end
   end
 
+  def show
+    @discount = Discount.find(params[:id])
+  end
+
+  def edit
+    @discount = Discount.find(params[:id])
+  end
+
   def new
     @discount = Discount.new
   end
@@ -16,6 +24,13 @@ class Merchant::DiscountsController < ApplicationController
     Discount.create!(percent: params[:discount][:percent], quantity_threshold: params[:discount][:quantity_threshold], merchant_id: params[:merchant_id])
 
     redirect_to "/merchants/#{params[:merchant_id]}/discounts"
+  end
+
+  def update
+    discount = Discount.find(params[:id])
+    discount.update!(percent: params[:discount][:percent], quantity_threshold: params[:discount][:quantity_threshold])
+
+    redirect_to "/merchants/#{discount.merchant_id}/discounts/#{discount.id}"
   end
 
   def destroy
