@@ -26,6 +26,13 @@ class Merchant::DiscountsController < ApplicationController
     redirect_to "/merchants/#{params[:merchant_id]}/discounts"
   end
 
+  def update
+    discount = Discount.find(params[:id])
+    discount.update!(percent: params[:discount][:percent], quantity_threshold: params[:discount][:quantity_threshold])
+
+    redirect_to "/merchants/#{discount.merchant_id}/discounts/#{discount.id}"
+  end
+
   def destroy
     Discount.find(params[:id]).destroy
     redirect_to "/merchants/#{params[:merchant_id]}/discounts"
