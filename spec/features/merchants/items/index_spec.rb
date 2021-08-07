@@ -19,6 +19,7 @@ RSpec.describe 'merchant items index page' do
     @item5 = @merchant1.items.create!(name: 'Twist Tie', description: 'So twisty', unit_price: 100)
     @item6 = @merchant1.items.create!(name: 'Snake-on-a-Rope', description: 'So squiggly', unit_price: 500)
     @item7 = @merchant1.items.create!(name: 'Chonky Rat', description: 'So chonky', unit_price: 1000)
+    @item8 = create(:item, merchant: @merchant2)
 
     @invoice1 = @customer1.invoices.create!(status: 2)
     @invoice2 = @customer2.invoices.create!(status: 2)
@@ -82,7 +83,7 @@ RSpec.describe 'merchant items index page' do
       expect(page).to have_content(@item1.name)
       expect(page).to have_content(@item2.name)
       expect(page).to have_content(@item3.name)
-      expect(page).to_not have_content(@item4.name)
+      expect(page).to_not have_content(@item8.name)
     end
 
     it 'can create an item by interacting with a form' do
@@ -121,7 +122,7 @@ RSpec.describe 'merchant items index page' do
     it 'displays top selling date of top items' do
       visit "merchants/#{@merchant1.id}/items"
 
-      expect(page).to have_content("Top selling date for #{@item1.name} was #{@item1.created_at.strftime('%A, %B %d, %Y')}")
+      expect(page).to have_content("Top selling date for #{@item7.name} was #{@item7.created_at.strftime('%A, %B %d, %Y')}")
     end
 
     it 'displays items by their status' do
