@@ -5,6 +5,7 @@ Rails.application.routes.draw do
     resources :items
     resources :invoices
     resources :invoice_items
+    resources :discounts
     get '/dashboard', to: 'merchants#dashboard'
   end
 
