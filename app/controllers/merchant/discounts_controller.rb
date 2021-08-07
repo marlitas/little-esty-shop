@@ -12,6 +12,10 @@ class Merchant::DiscountsController < ApplicationController
     @discount = Discount.find(params[:id])
   end
 
+  def edit
+    @discount = Discount.find(params[:id])
+  end
+
   def new
     @discount = Discount.new
   end
