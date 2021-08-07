@@ -19,3 +19,5 @@
 <% end %>
 
 <p>Total Revenue: $<%= @invoice.total_revenue(params[:merchant_id]) %> </p>
+<p>Total Discount Applied: $<%= @invoice.total_discount(params[:merchant_id]) %> </p>
+<p>Final Revenue: $<%= @invoice.discounted_revenue(params[:merchant_id]) %> </p>

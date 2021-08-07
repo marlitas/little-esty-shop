@@ -5,6 +5,9 @@ RSpec.describe 'Invoice show page' do
     @merchant1 = create(:merchant)
     @merchant2 = create(:merchant)
 
+    @discount1 = create(:discount, merchant_id: @merchant1.id)
+    @discount1 = create(:discount, merchant_id: @merchant2.id)
+
     @customer1 = create(:customer)
 
     @item1 = create(:item, merchant_id: @merchant1.id)
@@ -75,6 +78,16 @@ RSpec.describe 'Invoice show page' do
 
       within(:css, "##{@ii1.id}") do
         expect(page).to have_content('packaged')
+      end
+    end
+
+    describe 'discounts' do
+      it 'displays discounted revenue' do
+        visit "/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}"
+
+        expect(page).to have_content("$#{@invoice1.total_revenue(@merchant1.id)}")
+        expect(page).to have_content("$#{@invoice1.total_discount(@merchant1.id)}")
+        expect(page).to have_content("$#{@invoice1.discounted_revenue(@merchant1.id)}")
       end
     end
   end

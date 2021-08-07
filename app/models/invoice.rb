@@ -21,11 +21,23 @@ class Invoice < ApplicationRecord
   end
 
   def merchant_items(id)
-    items.where('merchant_id = ?', id).select('items.name, items.unit_price, invoice_items.quantity, items.merchant_id, invoice_items.status as order_status')
+    items.where('merchant_id = ?', id)
+    .select('items.name, items.unit_price, invoice_items.quantity, items.merchant_id, invoice_items.status as order_status')
   end
 
   def total_revenue(merchant_id)
-    merchant_items(merchant_id).sum('quantity * items.unit_price') / 100.00
+    merchant_items(merchant_id)
+    .sum('invoice_items.quantity * invoice_items.unit_price') / 100.00
+  end
+
+  def total_discount(merchant_id)
+    merchant_items(merchant_id)
+    .sum('quantity * items.unit_price') / 100.00
+  end
+
+  def discounted_revenue(merchant_id)
+    merchant_items(merchant_id)
+    .sum('quantity * items.unit_price') / 100.00
   end
 
   def total_invoice_revenue

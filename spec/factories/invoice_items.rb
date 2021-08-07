@@ -9,7 +9,7 @@ FactoryBot.define do
 
   factory :invoice_item_high, class: InvoiceItem do
     unit_price { 900000 }
-    quantity { 10 }
+    quantity { 20 }
     status { 1 }
     association :invoice, factory: :invoice
     association :item, factory: :item_high

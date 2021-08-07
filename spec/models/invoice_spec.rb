@@ -14,34 +14,35 @@ RSpec.describe Invoice, type: :model do
   end
 
   before :each do
-    @merchant1 = Merchant.create!(name: 'Sparkys Shop')
-    @merchant2 = Merchant.create!(name: 'BBs Petstore')
+    @merchant1 = create(:merchant)
+    @merchant2 = create(:merchant)
 
-    @customer1 = Customer.create!(first_name: 'Petey', last_name: 'Wimbley')
-    @customer2 = Customer.create!(first_name: 'Victoria', last_name: 'Jenkins')
-    @customer3 = Customer.create!(first_name: 'Pedro', last_name: 'Oscar')
-    @customer4 = Customer.create!(first_name: 'Scarlett', last_name: 'Redsley')
-    @customer5 = Customer.create!(first_name: 'Annie', last_name: 'Snip')
-    @customer6 = Customer.create!(first_name: 'Goran', last_name: 'Babalia')
+    @customer1 = create(:customer)
+    @customer2 = create(:customer)
+    @customer3 = create(:customer)
+    @customer4 = create(:customer)
+    @customer5 = create(:customer)
+    @customer6 = create(:customer)
 
-    @item1 = @merchant1.items.create!(name: 'Teddy Bear', description: 'So fuzzy', unit_price: 2000)
-    @item2 = @merchant1.items.create!(name: 'Toy Car', description: 'So fast', unit_price: 3000)
-    @item3 = @merchant1.items.create!(name: 'Bouncy Ball', description: 'So bouncy', unit_price: 500)
-    @item4 = @merchant2.items.create!(name: 'Dog Bone', description: 'So chewy', unit_price: 800)
+    @item1 = create(:item, merchant_id: @merchant1.id)
+    @item2 = create(:item, merchant_id: @merchant1.id)
+    @item3 = create(:item_low, merchant_id: @merchant2.id)
+    @item4 = create(:item, merchant_id: @merchant2.id)
 
-    @invoice1 = @customer1.invoices.create!(status: 0)
-    @invoice2 = @customer2.invoices.create!(status: 1)
-    @invoice3 = @customer3.invoices.create!(status: 1)
-    @invoice4 = @customer4.invoices.create!(status: 0)
-    @invoice5 = @customer5.invoices.create!(status: 1)
-    @invoice6 = @customer6.invoices.create!(status: 2)
+    @invoice1 = create(:cancelled_invoice, customer_id: @customer1.id)
+    @invoice2 = create(:invoice, customer_id: @customer2.id)
+    @invoice3 = create(:invoice, customer_id: @customer3.id)
+    @invoice4 = create(:cancelled_invoice, customer_id: @customer4.id)
+    @invoice5 = create(:invoice, customer_id: @customer5.id)
+    #@invoice6 = Invoice.create!(status: 2, customer_id: @customer6.id)
+    @invoice6 = create(:completed_invoice, customer_id: @customer6.id)
 
-    @transaction1 = @invoice1.transactions.create!(credit_card_number: "0123456789", credit_card_expiration_date: '12/31', result: 0)
-    @transaction2 = @invoice2.transactions.create!(credit_card_number: "9876543210", credit_card_expiration_date: '01/01', result: 0)
-    @transaction3 = @invoice3.transactions.create!(credit_card_number: "4444444444", credit_card_expiration_date: '06/07', result: 0)
-    @transaction4 = @invoice4.transactions.create!(credit_card_number: "2222111100", credit_card_expiration_date: '02/02', result: 0)
-    @transaction5 = @invoice5.transactions.create!(credit_card_number: "7934759378", credit_card_expiration_date: '03/20', result: 0)
-    @transaction6 = @invoice6.transactions.create!(credit_card_number: "7894739999", credit_card_expiration_date: '04/20', result: 0)
+    @transaction1 = create(:transaction, invoice_id: @invoice1.id)
+    @transaction2 = create(:transaction, invoice_id: @invoice2.id)
+    @transaction3 = create(:transaction, invoice_id: @invoice3.id)
+    @transaction4 = create(:transaction, invoice_id: @invoice4.id)
+    @transaction5 = create(:transaction, invoice_id: @invoice5.id)
+    @transaction6 = create(:transaction, invoice_id: @invoice6.id)
 
     @invoice1.items << [@item1]
     @invoice2.items << [@item2]
@@ -49,21 +50,21 @@ RSpec.describe Invoice, type: :model do
     @invoice4.items << [@item4]
     @invoice5.items << [@item4]
 
-    @ii1 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item1.id, quantity: 2, status: 2)
-    @ii2 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item2.id, quantity: 1, status: 2)
-    @ii3 = InvoiceItem.create!(invoice_id: @invoice6.id, item_id: @item4.id, quantity: 1, status: 2)
-    @ii4 = InvoiceItem.create!(invoice_id: @invoice3.id, item_id: @item3.id, quantity: 7, unit_price: 500, status: 0)
+    @ii1 = create(:shipped_invoice_item, invoice_id: @invoice6.id, item_id: @item1.id)
+    @ii2 = create(:shipped_invoice_item, invoice_id: @invoice6.id, item_id: @item2.id)
+    @ii3 = create(:shipped_invoice_item, invoice_id: @invoice6.id, item_id: @item3.id)
+    @ii4 = create(:invoice_item_high, invoice_id: @invoice3.id, item_id: @item4.id)
   end
 
   describe 'class methods' do
     it 'can retrieve invoices tied to merchant' do
       expect(Invoice.merchant_invoices(@merchant1.id).first.id).to eq(@invoice1.id)
       expect(Invoice.merchant_invoices(@merchant1.id).last.id).to eq(@invoice6.id)
-      expect(Invoice.merchant_invoices(@merchant1.id).length).to eq(4)
+      expect(Invoice.merchant_invoices(@merchant1.id).length).to eq(3)
     end
 
     describe '::admin_incomplete_invoices' do
-      it 'can find all the incomplete invoices listed by least recent created at date' do #returns only one 'completed' invoice (invoice6)
+      it 'can find all the incomplete invoices listed by least recent created at date' do #enum factorybot translation confusion.
        expect(Invoice.admin_incomplete_invoices).to eq([@invoice3])
      end
     end
@@ -77,11 +78,19 @@ RSpec.describe Invoice, type: :model do
     end
 
     it 'can calculate total revenue for merchant' do
-      expect(@invoice6.total_revenue(@merchant1.id)).to eq(70.00)
+      expect(@invoice6.total_revenue(@merchant1.id)).to eq(40.00)
     end
 
     it 'can calculate total invoice revenue' do
-      expect(@invoice3.total_invoice_revenue).to eq(35.00)
+      expect(@invoice3.total_invoice_revenue).to eq(180000.00)
+    end
+
+    it 'calculates total discount for merchant' do
+      # expect(@)
+    end
+
+    it 'calculates total revenue with discount applied for merchant' do
+
     end
   end
 end
