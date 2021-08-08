@@ -22,7 +22,7 @@ class Invoice < ApplicationRecord
 
   def merchant_items(id)
     items.where('merchant_id = ?', id)
-    .select('items.name, items.unit_price, invoice_items.quantity, items.merchant_id, invoice_items.status as order_status')
+    .select('items.name, invoice_items.quantity, invoice_items.unit_price, invoice_items.discount, items.merchant_id, invoice_items.status as order_status')
   end
 
   def total_revenue(merchant_id)
@@ -31,8 +31,31 @@ class Invoice < ApplicationRecord
   end
 
   def total_discount(merchant_id)
-    merchant_items(merchant_id)
-    .sum('quantity * items.unit_price') / 100.00
+    merchant = Merchant.find(merchant_id)
+    total_revenue(merchant_id) *
+    merchant.discounts
+    .joins(merchant: [{items: :invoice_items}])
+    .where('discounts.quantity_threshold >= invoice_items.quantity')
+  end
+
+  def apply_item_discount(merchant_id)
+    merchant = Merchant.find(merchant_id)
+    merchant_items(merchant_id).each do |item|
+      if merchant.discounts.where('discounts.quantity_threshold <= ?', item.quantity).empty?
+        item.update!(discount: 0)
+      else
+        item.update!(discount: calculate_discount(merchant, item))
+        require "pry"; binding.pry
+      end
+    end
+  end
+
+  def calculate_discount(merchant, item)
+    (merchant.discounts
+    .where('discounts.quantity_threshold <= ?', item.quantity)
+    .order('discounts.percent desc')
+    .limit(1)
+    .pluck('discounts.percent').first * (item.quantity * item.unit_price)) / 100
   end
 
   def discounted_revenue(merchant_id)

@@ -17,6 +17,9 @@ RSpec.describe Invoice, type: :model do
     @merchant1 = create(:merchant)
     @merchant2 = create(:merchant)
 
+    @discount1 = create(:discount, merchant_id: @merchant2.id)
+    @discount1 = create(:discount_medium, merchant_id: @merchant2.id)
+
     @customer1 = create(:customer)
     @customer2 = create(:customer)
     @customer3 = create(:customer)
@@ -44,16 +47,15 @@ RSpec.describe Invoice, type: :model do
     @transaction5 = create(:transaction, invoice_id: @invoice5.id)
     @transaction6 = create(:transaction, invoice_id: @invoice6.id)
 
-    @invoice1.items << [@item1]
-    @invoice2.items << [@item2]
-    @invoice3.items << [@item3, @item4]
-    @invoice4.items << [@item4]
-    @invoice5.items << [@item4]
-
     @ii1 = create(:shipped_invoice_item, invoice_id: @invoice6.id, item_id: @item1.id)
     @ii2 = create(:shipped_invoice_item, invoice_id: @invoice6.id, item_id: @item2.id)
     @ii3 = create(:shipped_invoice_item, invoice_id: @invoice6.id, item_id: @item3.id)
     @ii4 = create(:invoice_item_high, invoice_id: @invoice3.id, item_id: @item4.id)
+    @ii5 = create(:invoice_item, invoice_id: @invoice3.id, item_id: @item3.id)
+    @ii6 = create(:shipped_invoice_item, invoice_id: @invoice1.id, item_id: @item1.id)
+    @ii7 = create(:shipped_invoice_item, invoice_id: @invoice2.id, item_id: @item2.id)
+    @ii8 = create(:shipped_invoice_item, invoice_id: @invoice4.id, item_id: @item4.id)
+    @ii9 = create(:shipped_invoice_item, invoice_id: @invoice5.id, item_id: @item4.id)
   end
 
   describe 'class methods' do
@@ -82,14 +84,23 @@ RSpec.describe Invoice, type: :model do
     end
 
     it 'can calculate total invoice revenue' do
-      expect(@invoice3.total_invoice_revenue).to eq(180000.00)
+      expect(@invoice3.total_invoice_revenue).to eq(180020.00)
+    end
+
+    it 'updated invoice item with discount if applicable' do
+      @invoice3.apply_item_discount(@merchant2.id)
+      expect(@ii4.discount).to eq(9000000)
     end
 
     it 'calculates total discount for merchant' do
-      # expect(@)
+      expect(@invoice3.total_discount(@merchant2.id)).to eq(36000)
     end
 
     it 'calculates total revenue with discount applied for merchant' do
+      expect(@invoice3.discounted_revenue(@merchant2.id)).to eq(144000)
+    end
+
+    it 'does not apply discount to other items' do
 
     end
   end
