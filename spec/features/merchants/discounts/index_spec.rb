@@ -4,6 +4,7 @@ RSpec.describe 'Discount Index' do
   before(:each) do
     @merchant1 = create(:merchant)
     @merchant2 = create(:disabled_merchant)
+    @merchant3 = create(:merchant)
 
     @discount1 = create(:discount_high, merchant: @merchant1)
     @discount2 = create(:discount_medium, merchant: @merchant1)
@@ -48,6 +49,13 @@ RSpec.describe 'Discount Index' do
       expect(page).to have_content(@discount3.percent)
       expect(page).to have_content(@discount3.quantity_threshold)
 
+      expect(page).to_not have_content(@discount4.id)
+    end
+
+    it 'loads when merchant has no discounts' do
+      visit "/merchants/#{@merchant3.id}/discounts"
+
+      expect(page).to have_content('Add New Discount')
       expect(page).to_not have_content(@discount4.id)
     end
 
