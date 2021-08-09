@@ -8,8 +8,8 @@ class InvoiceItem < ApplicationRecord
   def unit_price_to_dollars
     self.unit_price / 100.00
   end
-    
-  def price_to_dollars(unit_price)
-    (unit_price / 100.00).round(2)
-  end
+
+  # def price_to_dollars(unit_price)
+  #   (unit_price / 100.00).round(2)
+  # end
 end

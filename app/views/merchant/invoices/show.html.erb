@@ -9,7 +9,7 @@
   <div id = <%= "#{ii.id}" %> >
     <h4><%= ii.name %></h4>
     <p>Quantity: <%= ii.quantity %></p>
-    <p>Unit Price: $<%= ii.price_to_dollars(ii.unit_price) %></p>
+    <p>Unit Price: $<%= ii.unit_price_to_dollars %></p>
     <% if ii.discount_id != nil %>
       <% discount = Discount.find(ii.discount_id) %>
       <%= link_to "#{discount.percent}% Discount Applied", "/merchants/#{@merchant.id}/discounts/#{discount.id}" %>
