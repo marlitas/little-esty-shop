@@ -62,4 +62,12 @@ RSpec.describe 'Invoice Show page' do
     expect(page).to have_content("Total Revenue")
     expect(page).to have_content(100.00)
   end
+
+  describe 'discounts' do
+    it 'displays discounted revenue' do
+      expect(page).to have_content("$#{@invoice_1.total_invoice_revenue}")
+      expect(page).to have_content("$#{@invoice_1.total_discount(@merchant1.id)}")
+      expect(page).to have_content("$#{@invoice1.discounted_revenue(@merchant1.id)}")
+    end
+  end
 end

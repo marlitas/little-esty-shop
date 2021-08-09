@@ -19,6 +19,7 @@ RSpec.describe Invoice, type: :model do
 
     @discount1 = create(:discount, merchant_id: @merchant2.id)
     @discount2 = create(:discount_medium, merchant_id: @merchant2.id)
+    @discount3 = create(:discount_low, merchant_id: @merchant1.id)
 
     @customer1 = create(:customer)
     @customer2 = create(:customer)
@@ -56,13 +57,14 @@ RSpec.describe Invoice, type: :model do
     @ii7 = create(:shipped_invoice_item, invoice_id: @invoice2.id, item_id: @item2.id)
     @ii8 = create(:shipped_invoice_item, invoice_id: @invoice4.id, item_id: @item4.id)
     @ii9 = create(:shipped_invoice_item, invoice_id: @invoice5.id, item_id: @item4.id)
+    @ii9 = create(:invoice_item_medium, invoice_id: @invoice3.id, item_id: @item2.id)
   end
 
   describe 'class methods' do
     it 'can retrieve invoices tied to merchant' do
       expect(Invoice.merchant_invoices(@merchant1.id).first.id).to eq(@invoice1.id)
       expect(Invoice.merchant_invoices(@merchant1.id).last.id).to eq(@invoice6.id)
-      expect(Invoice.merchant_invoices(@merchant1.id).length).to eq(3)
+      expect(Invoice.merchant_invoices(@merchant1.id).length).to eq(4)
     end
 
     describe '::admin_incomplete_invoices' do
@@ -84,7 +86,7 @@ RSpec.describe Invoice, type: :model do
     end
 
     it 'can calculate total invoice revenue' do
-      expect(@invoice3.total_invoice_revenue).to eq(180020.00)
+      expect(@invoice3.total_invoice_revenue).to eq(182520.00)
     end
 
     it 'can choose best discount' do
@@ -97,7 +99,7 @@ RSpec.describe Invoice, type: :model do
     end
 
     it 'updates invoice item with discount if applicable' do
-      @invoice3.apply_item_discount(@merchant2.id)
+      @invoice3.apply_item_discount
 
       expect(@ii4.discount).to eq(90000)
       expect(@ii4.discount_id).to eq(@discount2.id)
@@ -105,12 +107,12 @@ RSpec.describe Invoice, type: :model do
       #why is this failing ^^ ... currently returning nil
     end
 
-    it 'calculates total discount for merchant' do
-      expect(@invoice3.total_discount(@merchant2.id)).to eq(90000)
+    it 'calculates total discount for invoice' do
+      expect(@invoice3.total_invoice_discount).to eq(90250)
     end
 
-    it 'calculates total revenue with discount applied for merchant' do
-      expect(@invoice3.discounted_revenue(@merchant2.id)).to eq(90020)
+    it 'calculates total revenue with discount applied for invoice' do
+      expect(@invoice3.total_discounted_revenue).to eq(92270)
     end
   end
 end
