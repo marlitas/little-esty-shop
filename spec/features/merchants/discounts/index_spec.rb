@@ -33,6 +33,16 @@ RSpec.describe 'Discount Index' do
       expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts")
       expect(page).to_not have_content(@discount1.id)
     end
+
+     it 'directs you to discount show' do
+       visit "/merchants/#{@merchant1.id}/discounts"
+
+       within(:css, "##{@discount1.id}") do
+         click_on("Discount ID: #{@discount1.id}")
+       end
+
+       expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts/#{@discount1.id}")
+     end
   end
 
   describe 'merchant' do
