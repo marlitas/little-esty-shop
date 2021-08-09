@@ -76,5 +76,11 @@ RSpec.describe 'Invoice Show page' do
       expect(page).to have_content("$#{@invoice_3.total_invoice_discount}")
       expect(page).to have_content("$#{@invoice_3.total_discounted_revenue}")
     end
+
+    it 'loads even if there are no discounts' do
+      Discount.destroy_all
+
+      visit admin_invoice_path(@invoice_3.id)
+    end
   end
 end
