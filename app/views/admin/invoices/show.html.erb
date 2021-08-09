@@ -21,7 +21,9 @@
   </div>
 <% end %>
 
-<h2 style="color:green;">Total Revenue: <%= number_to_currency(@invoice.total_invoice_revenue) %> </h2>
+<p>Total Revenue: $<%= @invoice.total_invoice_revenue %> </p>
+<p>Total Discount Applied: $<%= @invoice.total_invoice_discount %> </p>
+<p>Final Revenue: $<%= @invoice.total_discounted_revenue %> </p>
 
 <div id="status"><%= form_with url: admin_invoice_path(@invoice.id), method: :patch, local: true do |f| %>
 <%= f.select :status, [:cancelled, 'in progress', :completed], :value => @invoice.status %>

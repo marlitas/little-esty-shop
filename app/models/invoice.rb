@@ -38,18 +38,6 @@ class Invoice < ApplicationRecord
     .sum('invoice_items.discount') / 100.00
   end
 
-  # def apply_item_discount(merchant_id)
-  #   merchant = Merchant.find(merchant_id)
-  #   merchant_items(merchant_id).each do |item|
-  #     ii = InvoiceItem.find(item.id)
-  #     if self.choose_discount(merchant, item).nil?
-  #       ii.update!(discount: 0)
-  #     else
-  #       ii.update!(discount: calculate_discount(merchant, item), discount_id: choose_discount(merchant, item).id)
-  #     end
-  #   end
-  # end
-
   def choose_discount(merchant, item)
     merchant.discounts
     .where('discounts.quantity_threshold <= ?', item.quantity)
