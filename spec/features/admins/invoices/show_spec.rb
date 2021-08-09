@@ -6,6 +6,9 @@ RSpec.describe 'Invoice Show page' do
 
     @customer_1 = Customer.create!(first_name: 'Joey', last_name: 'Ondricka')
 
+    @discount1 = create(:discount, merchant_id: @merchant_1.id)
+    @discount2 = create(:discount_low, merchant_id: @merchant_1.id)
+
     @invoice_1 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}", created_at: "2012-03-25 09:54:09 UTC")
     @invoice_2 = Invoice.create!(status: 1, customer_id: "#{@customer_1.id}")
     @invoice_3 = Invoice.create!(status: 0, customer_id: "#{@customer_1.id}", created_at: '2012-03-24 09:54:09 UTC')
@@ -19,6 +22,8 @@ RSpec.describe 'Invoice Show page' do
     @ii2 = InvoiceItem.create!(invoice: @invoice_1, item: @item_2, quantity: 3, unit_price: 1000, status: 0)
     @ii3 = InvoiceItem.create!(invoice: @invoice_1, item: @item_3, quantity: 2, unit_price: 1000, status: 0)
     @ii4 = InvoiceItem.create!(invoice: @invoice_1, item: @item_4, quantity: 1, unit_price: 1000, status: 0)
+    @ii4 = InvoiceItem.create!(invoice: @invoice_3, item: @item_4, quantity: 5, unit_price: 1000, status: 0)
+    @ii4 = InvoiceItem.create!(invoice: @invoice_3, item: @item_2, quantity: 2, unit_price: 1000, status: 0)
 
     visit admin_invoice_path(@invoice_1.id)
   end
@@ -61,5 +66,15 @@ RSpec.describe 'Invoice Show page' do
   it 'displays total revenue from this invoice' do
     expect(page).to have_content("Total Revenue")
     expect(page).to have_content(100.00)
+  end
+
+  describe 'discounts' do
+    it 'displays discounted revenue' do
+      visit admin_invoice_path(@invoice_3.id)
+
+      expect(page).to have_content("$#{@invoice_3.total_invoice_revenue}")
+      expect(page).to have_content("$#{@invoice_3.total_invoice_discount}")
+      expect(page).to have_content("$#{@invoice_3.total_discounted_revenue}")
+    end
   end
 end

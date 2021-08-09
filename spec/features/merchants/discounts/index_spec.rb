@@ -10,8 +10,7 @@ RSpec.describe 'Discount Index' do
     @discount3 = create(:discount_low, merchant: @merchant1)
     @discount4 = create(:discount, merchant: @merchant2 )
 
-    allow_any_instance_of(Holiday).to receive(:name).and_return('Christmas Day')
-    allow_any_instance_of(Holiday).to receive(:date).and_return('2021-12-24')
+    allow_any_instance_of(NagerService).to receive(:get_holiday).and_return([{localName: 'Christmas Day', date: '2021-12-24'}, {localName: 'Thanksgiving', date: '2021-11-28'}, {localName: 'New Years Eve', date: '2021-12-31'}, {localName: 'Labor Day', date: '2021-09-04'}, {localName: 'Independence Day', date: '2021-07-04'}])
   end
 
   describe 'links' do
@@ -56,8 +55,13 @@ RSpec.describe 'Discount Index' do
       visit "/merchants/#{@merchant1.id}/discounts"
 
       expect(page).to have_content('Upcoming Holidays')
-      expect(page).to have_content('Christmas Day')
+      expect('Labor Day').to appear_before('Thanksgiving')
+      expect('Thanksgiving').to appear_before('Christmas Day')
+
       expect(page).to have_content('2021-12-24')
+      expect(page).to have_content('2021-11-28')
+
+      expect(page).to_not have_content('Independence Day')
     end
   end
 end

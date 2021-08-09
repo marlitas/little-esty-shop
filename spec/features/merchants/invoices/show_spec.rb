@@ -2,26 +2,31 @@ require 'rails_helper'
 
 RSpec.describe 'Invoice show page' do
   before :each do
-    @merchant1 = Merchant.create!(name: 'Sparkys Shop')
-    @merchant2 = Merchant.create!(name: 'BBs Petstore')
+    @merchant1 = create(:merchant)
+    @merchant2 = create(:merchant)
 
-    @customer1 = Customer.create!(first_name: 'Petey', last_name: 'Wimbley')
+    @discount1 = create(:discount_low, merchant_id: @merchant1.id)
+    @discount2 = create(:discount_medium, merchant_id: @merchant1.id)
+    @discount3 = create(:discount, merchant_id: @merchant2.id)
 
-    @item1 = @merchant1.items.create!(name: 'Teddy Bear', description: 'So fuzzy', unit_price: 2000)
-    @item2 = @merchant1.items.create!(name: 'Toy Car', description: 'So fast', unit_price: 3000)
-    @item3 = @merchant1.items.create!(name: 'Bouncy Ball', description: 'So bouncy', unit_price: 500)
-    @item4 = @merchant2.items.create!(name: 'Dog Bone', description: 'So chewy', unit_price: 800)
+    @customer1 = create(:customer)
 
-    @invoice1 = @customer1.invoices.create!(status: 0)
-    @invoice2 = @customer1.invoices.create!(status: 1)
+    @item1 = create(:item, merchant_id: @merchant1.id)
+    @item2 = create(:item, merchant_id: @merchant1.id)
+    @item3 = create(:item_low, merchant_id: @merchant1.id)
+    @item4 = create(:item, merchant_id: @merchant2.id)
 
-    @transaction1 = @invoice1.transactions.create!(credit_card_number: "0123456789", credit_card_expiration_date: '12/31', result: 0)
-    @transaction2 = @invoice1.transactions.create!(credit_card_number: "9876543210", credit_card_expiration_date: '01/01', result: 1)
+    @invoice1 = create(:cancelled_invoice, customer_id: @customer1.id)
+    @invoice2 = create(:invoice, customer_id: @customer1.id)
 
-    @ii1 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item1.id, quantity: 2, status: 'pending', unit_price: 2000)
-    @ii2 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item2.id, quantity: 5, status: 'packaged', unit_price: 2000)
-    @ii3 = InvoiceItem.create!(invoice_id: @invoice2.id, item_id: @item3.id, quantity: 8, status: 'shipped', unit_price: 2000)
-    @ii4 = InvoiceItem.create!(invoice_id: @invoice1.id, item_id: @item4.id, quantity: 6, status: 'shipped', unit_price: 2000)
+    @transaction1 = create(:transaction, invoice_id: @invoice1.id)
+    @transaction2 = create(:failed_transaction, invoice_id: @invoice1.id)
+
+    @ii1 = create(:invoice_item_low, invoice_id: @invoice1.id, item_id: @item1.id)
+    @ii2 = create(:invoice_item, invoice_id: @invoice1.id, item_id: @item2.id)
+    @ii3 = create(:invoice_item_high, invoice_id: @invoice2.id, item_id: @item3.id)
+    @ii4 = create(:invoice_item_medium, invoice_id: @invoice1.id, item_id: @item4.id)
+    @ii5 = create(:invoice_item_medium, invoice_id: @invoice2.id, item_id: @item1.id)
   end
 
   describe 'merchant' do
@@ -75,6 +80,26 @@ RSpec.describe 'Invoice show page' do
 
       within(:css, "##{@ii1.id}") do
         expect(page).to have_content('packaged')
+      end
+    end
+
+    describe 'discounts' do
+      it 'displays discounted revenue' do
+        visit "/merchants/#{@merchant1.id}/invoices/#{@invoice1.id}"
+
+        expect(page).to have_content("$#{@invoice1.total_revenue(@merchant1.id)}")
+        expect(page).to have_content("$#{@invoice1.total_discount(@merchant1.id)}")
+        expect(page).to have_content("$#{@invoice1.discounted_revenue(@merchant1.id)}")
+      end
+
+      it 'links to applied discount show page' do
+        visit "/merchants/#{@merchant1.id}/invoices/#{@invoice2.id}"
+
+        within(:css, "##{@ii3.id}") do
+          click_on ("#{@discount2.percent}% Discount Applied")
+        end
+
+        expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts/#{@discount2.id}")
       end
     end
   end
