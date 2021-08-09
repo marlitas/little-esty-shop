@@ -18,7 +18,7 @@ RSpec.describe Invoice, type: :model do
     @merchant2 = create(:merchant)
 
     @discount1 = create(:discount, merchant_id: @merchant2.id)
-    @discount1 = create(:discount_medium, merchant_id: @merchant2.id)
+    @discount2 = create(:discount_medium, merchant_id: @merchant2.id)
 
     @customer1 = create(:customer)
     @customer2 = create(:customer)
@@ -87,6 +87,11 @@ RSpec.describe Invoice, type: :model do
       expect(@invoice3.total_invoice_revenue).to eq(180020.00)
     end
 
+    it 'can choose best discount' do
+      expect(@invoice3.choose_discount(@merchant2, @ii4)).to eq(@discount2)
+      expect(@invoice3.choose_discount(@merchant2, @ii5)).to eq(nil)
+    end
+
     it 'calculates discount for an invoice item' do
       expect(@invoice3.calculate_discount(@merchant2, @ii4)).to eq(9000000)
     end
@@ -95,6 +100,7 @@ RSpec.describe Invoice, type: :model do
       @invoice3.apply_item_discount(@merchant2.id)
 
       expect(@ii4.discount).to eq(90000)
+      expect(@ii4.discount_id).to eq(@discount2.id)
       expect(@ii5.discount).to eq(0)
       #why is this failing ^^ ... currently returning nil
     end

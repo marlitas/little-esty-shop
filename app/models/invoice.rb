@@ -42,20 +42,24 @@ class Invoice < ApplicationRecord
     merchant = Merchant.find(merchant_id)
     merchant_items(merchant_id).each do |item|
       ii = InvoiceItem.find(item.id)
-      if merchant.discounts.where('discounts.quantity_threshold <= ?', item.quantity).empty?
+      if self.choose_discount(merchant, item).nil?
         ii.update!(discount: 0)
       else
-        ii.update!(discount: calculate_discount(merchant, item))
+        ii.update!(discount: calculate_discount(merchant, item), discount_id: choose_discount(merchant, item).id)
       end
     end
   end
 
-  def calculate_discount(merchant, item)
-    (merchant.discounts
+  def choose_discount(merchant, item)
+    merchant.discounts
     .where('discounts.quantity_threshold <= ?', item.quantity)
     .order('discounts.percent desc')
-    .limit(1)
-    .pluck('discounts.percent').first * (item.quantity * item.unit_price)) / 100
+    .limit(1).first
+  end
+
+  def calculate_discount(merchant, item)
+    self.choose_discount(merchant, item)
+    .percent * (item.quantity * item.unit_price) / 100
   end
 
   def discounted_revenue(merchant_id)
