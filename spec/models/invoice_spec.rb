@@ -87,17 +87,20 @@ RSpec.describe Invoice, type: :model do
       expect(@invoice3.total_invoice_revenue).to eq(180020.00)
     end
 
-    it 'updated invoice item with discount if applicable' do
+    it 'updates invoice item with discount if applicable' do
       @invoice3.apply_item_discount(@merchant2.id)
+
       expect(@ii4.discount).to eq(9000000)
+      expect(@ii5.discount).to eq(0)
+      #why is this failing ^^ ... currently returning nil
     end
 
     it 'calculates total discount for merchant' do
-      expect(@invoice3.total_discount(@merchant2.id)).to eq(36000)
+      expect(@invoice3.total_discount(@merchant2.id)).to eq(90000)
     end
 
     it 'calculates total revenue with discount applied for merchant' do
-      expect(@invoice3.discounted_revenue(@merchant2.id)).to eq(144000)
+      expect(@invoice3.discounted_revenue(@merchant2.id)).to eq(90020)
     end
 
     it 'does not apply discount to other items' do
