@@ -35,7 +35,7 @@ class Invoice < ApplicationRecord
     self.invoice_items
     .joins(:item)
     .where('items.merchant_id = ?', merchant_id)
-    .sum('invoice_items.discount') / 100
+    .sum('invoice_items.discount') / 100.00
   end
 
   def apply_item_discount(merchant_id)
