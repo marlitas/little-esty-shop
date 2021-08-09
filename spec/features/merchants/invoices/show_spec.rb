@@ -5,8 +5,9 @@ RSpec.describe 'Invoice show page' do
     @merchant1 = create(:merchant)
     @merchant2 = create(:merchant)
 
-    @discount1 = create(:discount, merchant_id: @merchant1.id)
-    @discount1 = create(:discount, merchant_id: @merchant2.id)
+    @discount1 = create(:discount_low, merchant_id: @merchant1.id)
+    @discount2 = create(:discount_medium, merchant_id: @merchant1.id)
+    @discount3 = create(:discount, merchant_id: @merchant2.id)
 
     @customer1 = create(:customer)
 
@@ -25,6 +26,7 @@ RSpec.describe 'Invoice show page' do
     @ii2 = create(:invoice_item, invoice_id: @invoice1.id, item_id: @item2.id)
     @ii3 = create(:invoice_item_high, invoice_id: @invoice2.id, item_id: @item3.id)
     @ii4 = create(:invoice_item_medium, invoice_id: @invoice1.id, item_id: @item4.id)
+    @ii5 = create(:invoice_item_medium, invoice_id: @invoice2.id, item_id: @item1.id)
   end
 
   describe 'merchant' do
@@ -88,6 +90,16 @@ RSpec.describe 'Invoice show page' do
         expect(page).to have_content("$#{@invoice1.total_revenue(@merchant1.id)}")
         expect(page).to have_content("$#{@invoice1.total_discount(@merchant1.id)}")
         expect(page).to have_content("$#{@invoice1.discounted_revenue(@merchant1.id)}")
+      end
+
+      it 'links to applied discount show page' do
+        visit "/merchants/#{@merchant1.id}/invoices/#{@invoice2.id}"
+
+        within(:css, "##{@ii3.id}") do
+          click_on ("#{@discount2.percent}% Discount Applied")
+        end
+
+        expect(current_path).to eq("/merchants/#{@merchant1.id}/discounts/#{@discount2.id}")
       end
     end
   end
