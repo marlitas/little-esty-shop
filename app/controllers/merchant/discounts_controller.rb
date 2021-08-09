@@ -1,11 +1,18 @@
 class Merchant::DiscountsController < ApplicationController
+  def upcoming_holidays
+    json = NagerService.new.get_holiday
+    holidays = json.map do |holiday|
+      Holiday.new(holiday)
+    end.find_all do |holiday|
+      holiday.date > Time.now
+    end.min_by(3) do |holiday|
+      holiday.date
+    end
+  end
+
   def index
     @merchant = Merchant.find(params[:merchant_id])
-    json = NagerService.new.get_holiday
-    #add method to filter holidays by three coming up
-    @holidays = json.map do |holiday|
-      Holiday.new(holiday)
-    end
+    @holidays = upcoming_holidays
   end
 
   def show
