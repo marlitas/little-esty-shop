@@ -14,6 +14,7 @@ class Invoice < ApplicationRecord
     .distinct
   end
 
+#switch to merchant instance method?
   def self.merchant_invoices(id)
     joins(:items)
     .select('invoices.*')
@@ -28,14 +29,6 @@ class Invoice < ApplicationRecord
   def total_revenue(merchant_id)
     merchant_items(merchant_id)
     .sum('invoice_items.quantity * invoice_items.unit_price') / 100.00
-  end
-
-  def total_discount(merchant_id)
-    apply_item_discount
-    invoice_items
-    .joins(:item)
-    .where('items.merchant_id = ?', merchant_id)
-    .sum('invoice_items.discount') / 100.00
   end
 
   def choose_discount(merchant, item)
@@ -66,10 +59,17 @@ class Invoice < ApplicationRecord
     end
   end
 
-  def total_invoice_discount
-    self.apply_item_discount
-    self.invoice_items
+  def total_discount(merchant_id)
+    apply_item_discount
+    invoice_items
+    .joins(:item)
+    .where('items.merchant_id = ?', merchant_id)
     .sum('invoice_items.discount') / 100.00
+  end
+
+  def total_invoice_discount
+    apply_item_discount
+    invoice_items.sum('invoice_items.discount') / 100.00
   end
 
   def total_discounted_revenue
