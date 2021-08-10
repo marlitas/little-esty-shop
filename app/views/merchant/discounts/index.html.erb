@@ -13,7 +13,7 @@
   <% @merchant.discounts.each do |discount| %>
     <div class = 'card col-4' id= <%= "#{discount.id}" %> >
       <h4><%= link_to "Discount ID: #{discount.id}", "/merchants/#{@merchant.id}/discounts/#{discount.id}" %></h4>
-      <p>Perfcent off: %<%= discount.percent %> </p>
+      <p>Perfcent off: <%= discount.percent %>% </p>
       <p>quantity_threshold: <%= discount.quantity_threshold %> </p>
       <%= form_with url: "/merchants/#{@merchant.id}/discounts/#{discount.id}", method: :delete, local:true do |f| %>
         <%= f.submit 'Delete Discount' %>
