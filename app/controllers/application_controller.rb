@@ -8,14 +8,14 @@ class ApplicationController < ActionController::Base
     @repo = Repo.new(json)
   end
 
-  def pull_count
-    @pull_count = GithubService.new.pull_count.count
-  end
+  # def pull_count
+  #   @pull_count = GithubService.new.pull_count.count
+  # end
 
-  def contributor_fetch
-    json = GithubService.new.contributor
-    @contributors = json.map do |contributor|
-      Contributor.new(contributor)
-    end
-  end
+  # def contributor_fetch
+  #   json = GithubService.new.contributor
+  #   @contributors = json.map do |contributor|
+  #     Contributor.new(contributor)
+  #   end
+  # end
 end
