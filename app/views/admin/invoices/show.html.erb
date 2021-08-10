@@ -1,6 +1,9 @@
-<%= link_to "Dashboard", admin__index_path %>
-<%= link_to "Merchants", admin_merchants_path %>
-<%= link_to "Invoices", admin_invoices_path %></br></br>
+<div class="admin-links">
+  <p>Admin Links:</p>
+  <%= link_to "Dashboard", admin__index_path %>
+  <%= link_to "Merchants", admin_merchants_path %>
+  <%= link_to "Invoices", admin_invoices_path %>
+</div>
 
 <h2>Invoice #<%= @invoice.id %></h2>
 <p>Status: <%= @invoice.status %></p>
@@ -9,17 +12,19 @@
 
 
 <h3>Invoice Items</h3>
-<% @invoice.items.each do |item| %>
-<div id=<%= "#{item.id}"%>>
-  <h4><%= item.name %></h4>
-  <% item.invoice_items.each do |ii| %>
-    <p>Quantity: <%= ii.quantity %>
-    <p>Unit Price: <%= number_to_currency(ii.unit_price_to_dollars) %>
-    <p>Status: <%= ii.status %>
-    <p>ID: <%= ii.item_id %></p>
+<div class="row">
+  <% @invoice.items.each do |item| %>
+  <div class = 'card col-4' id=<%= "#{item.id}"%>>
+    <h4><%= item.name %></h4>
+    <% item.invoice_items.each do |ii| %>
+      <p>Quantity: <%= ii.quantity %>
+      <p>Unit Price: <%= number_to_currency(ii.unit_price_to_dollars) %>
+      <p>Status: <%= ii.status %>
+      <p>ID: <%= ii.item_id %></p>
+    <% end %>
+    </div>
   <% end %>
-  </div>
-<% end %>
+</div>
 
 <p>Total Revenue: $<%= @invoice.total_invoice_revenue %> </p>
 <p>Total Discount Applied: $<%= @invoice.total_invoice_discount %> </p>

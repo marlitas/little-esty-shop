@@ -1,0 +1,9 @@
+<h1>Access Each Merchant's Dashboard</h1>
+
+<div class="row">
+  <% @merchants.each do |merchant| %>
+    <div class="card col-4">
+      <%= link_to "#{merchant.name}", "/merchants/#{merchant.id}/dashboard" %>
+    </div>
+  <% end %>
+</div>
