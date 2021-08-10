@@ -18,8 +18,8 @@
 
 <%= link_to 'Create a New Item', "/merchants/#{@merchant.id}/items/new" %>
 
-<h2>Enabled Items</h2>
-<div class = 'row'>
+<div class = 'row' id = 'enabled'>
+  <h2>Enabled Items</h2>
   <% @merchant.items.enabled.each do |item| %>
     <div class = 'card col-4' id= <%= "#{item.id}" %>>
       <p><%= link_to "#{item.name}", "/merchants/#{@merchant.id}/items/#{item.id}" %></p>
@@ -33,8 +33,8 @@
   <% end %>
 </div>
 
-<h2>Disabled Items</h2>
-<div class = 'row' >
+<div class = 'row' id = 'disabled'>
+  <h2>Disabled Items</h2>
   <% @merchant.items.disabled.each do |item| %>
     <div class = 'card col-4' id= <%= "#{item.id}" %>>
       <p><%= link_to "#{item.name}", "/merchants/#{@merchant.id}/items/#{item.id}" %></p>
