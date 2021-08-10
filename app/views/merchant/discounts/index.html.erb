@@ -1,20 +1,33 @@
 <h1>My Bulk Discounts</h1>
 
+<div class="admin-links">
+  <p>Merchant Links:</p>
+  <%= link_to 'My Items', "/merchants/#{@merchant.id}/items" %>
+  <%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices" %>
+  <%= link_to 'My Discounts', "/merchants/#{@merchant.id}/discounts" %>
+</div>
+
 <%= link_to 'Add New Discount', "/merchants/#{@merchant.id}/discounts/new" %>
 
-<% @merchant.discounts.each do |discount| %>
-  <div id= <%= "#{discount.id}" %> >
-    <h4><%= link_to "Discount ID: #{discount.id}", "/merchants/#{@merchant.id}/discounts/#{discount.id}" %></h4>
-    <p>Perfcent off: %<%= discount.percent %> </p>
-    <p>quantity_threshold: <%= discount.quantity_threshold %> </p>
-    <%= form_with url: "/merchants/#{@merchant.id}/discounts/#{discount.id}", method: :delete, local:true do |f| %>
-      <%= f.submit 'Delete Discount' %>
-    <% end %>
-  </div>
-<% end %>
+<div class="row">
+  <% @merchant.discounts.each do |discount| %>
+    <div class = 'card col-4' id= <%= "#{discount.id}" %> >
+      <h4><%= link_to "Discount ID: #{discount.id}", "/merchants/#{@merchant.id}/discounts/#{discount.id}" %></h4>
+      <p>Perfcent off: %<%= discount.percent %> </p>
+      <p>quantity_threshold: <%= discount.quantity_threshold %> </p>
+      <%= form_with url: "/merchants/#{@merchant.id}/discounts/#{discount.id}", method: :delete, local:true do |f| %>
+        <%= f.submit 'Delete Discount' %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
 
 <h2>Upcoming Holidays</h2>
-<% @holidays.each do |holiday| %>
-  <p> <%= holiday.name %> </p>
-  <p> <%= holiday.date %> </p>
-<% end %>
+
+<ul>
+  <% @holidays.each do |holiday| %>
+    <li><p> <%= holiday.name %> </p>
+    <p> <%= holiday.date %> </p></li>
+  <% end %>
+</ul>

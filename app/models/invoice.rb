@@ -44,7 +44,7 @@ class Invoice < ApplicationRecord
   end
 
   def discounted_revenue(merchant_id)
-    self.total_revenue(merchant_id) - self.total_discount(merchant_id)
+    (total_revenue(merchant_id) - total_discount(merchant_id)).round(2)
   end
 
   def apply_item_discount

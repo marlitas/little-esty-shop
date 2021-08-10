@@ -1,14 +1,24 @@
 <h1><%= @merchant.name %></h1>
-<%= link_to 'My Items', "/merchants/#{@merchant.id}/items" %>
-<%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices" %>
-<%= link_to 'My Discounts', "/merchants/#{@merchant.id}/discounts" %>
-<% Customer.top_customers(@merchant.id).each do |customer| %>
-  <p><%= customer.first_name %> <%= customer.last_name %>: <%= customer.total_transactions %></p>
-<% end %>
+
+<div class="admin-links">
+  <p>Merchant Links:</p>
+  <%= link_to 'My Items', "/merchants/#{@merchant.id}/items" %>
+  <%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices" %>
+  <%= link_to 'My Discounts', "/merchants/#{@merchant.id}/discounts" %>
+</div>
+
+<ol>
+  <% Customer.top_customers(@merchant.id).each do |customer| %>
+  <li><p><%= customer.first_name %> <%= customer.last_name %>: <%= customer.total_transactions %></p></li>
+  <% end %>
+</ol>
+
 <h2>Items Ready to Ship</h2>
-<% Item.ready_to_ship(@merchant.id).each do |item| %>
-    <div id= <%= "#{item.id}" %>>
-      <p><%= item.name %></p>
-      <p>Invoice ID: <%= link_to "#{item.invoice_id}", "/merchants/#{@merchant.id}/invoices/#{item.invoice_id}" %>, Created at: <%= item.created_at.strftime("%A, %B %d, %Y") %></p>
-    </div>
-<% end %>
+<div class="row">
+  <% Item.ready_to_ship(@merchant.id).each do |item| %>
+      <div class= 'card col-4' id= <%= "#{item.id}" %>>
+        <p><%= item.name %></p>
+        <p>Invoice ID: <%= link_to "#{item.invoice_id}", "/merchants/#{@merchant.id}/invoices/#{item.invoice_id}" %>, Created at: <%= item.created_at.strftime("%A, %B %d, %Y") %></p>
+      </div>
+  <% end %>
+</div>

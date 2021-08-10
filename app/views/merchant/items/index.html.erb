@@ -1,19 +1,27 @@
 <h1>My Items</h1>
 
+<div class="admin-links">
+  <p>Merchant Links:</p>
+  <%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices" %>
+  <%= link_to 'My Discounts', "/merchants/#{@merchant.id}/discounts" %>
+</div>
+
 <h2>My Top 5 Items By Revenue</h2>
 <div class= "top-5-items">
-<% @merchant.items.top_5_items.each do |item| %>
-  <p><%= link_to item.name, "/merchants/#{@merchant.id}/items/#{item.id}" %>, Revenue Generated: <%= item.total %></p>
-  <p>Top selling date for <%= item.name %> was <%= item.best_day.strftime("%A, %B %d, %Y") %></p>
-<% end %>
+  <ol>
+    <% @merchant.items.top_5_items.each do |item| %>
+      <li><p><%= link_to item.name, "/merchants/#{@merchant.id}/items/#{item.id}" %>, Revenue Generated: <%= item.total %></p>
+      <p>Top selling date for <%= item.name %> was <%= item.best_day.strftime("%A, %B %d, %Y") %></p></li>
+    <% end %>
+  </ol>
 </div>
 
 <%= link_to 'Create a New Item', "/merchants/#{@merchant.id}/items/new" %>
 
-<div id="enabled">
-  <h2>Enabled Items</h2>
+<h2>Enabled Items</h2>
+<div class = 'row'>
   <% @merchant.items.enabled.each do |item| %>
-    <div id= <%= "#{item.id}" %>>
+    <div class = 'card col-4' id= <%= "#{item.id}" %>>
       <p><%= link_to "#{item.name}", "/merchants/#{@merchant.id}/items/#{item.id}" %></p>
       <p>Description: <%= item.description %></p>
       <p>Unit Price: <%= item.unit_price %></p>
@@ -25,10 +33,10 @@
   <% end %>
 </div>
 
-<div id='disabled'>
-  <h2>Disabled Items</h2>
+<h2>Disabled Items</h2>
+<div class = 'row' >
   <% @merchant.items.disabled.each do |item| %>
-    <div id= <%= "#{item.id}" %>>
+    <div class = 'card col-4' id= <%= "#{item.id}" %>>
       <p><%= link_to "#{item.name}", "/merchants/#{@merchant.id}/items/#{item.id}" %></p>
       <p>Description: <%= item.description %></p>
       <p>Unit Price: <%= item.unit_price %></p>

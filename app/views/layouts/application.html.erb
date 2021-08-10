@@ -8,21 +8,30 @@
     <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-  <div class="container">
-    <nav>
-      <%= link_to 'Admin Dashboard', "/admin" %>
-      <%= link_to 'Merchant Dashboard', "/merchants/1/dashboard"  %>
-    </nav>
-    <body>
+
+  <body>
+    <div class="page-content">
+      <nav>
+        <%= link_to 'Admin', "/admin" %>
+        <%= link_to 'Merchant', "/merchants"  %>
+      </nav>
+      <div class="container">
+        <% flash.each do |type, msg| %>
+          <div>
+            <%= msg %>
+          </div>
+        <% end %>
         <%= yield %>
-        <footer>
-          <p>github repo: <%= @repo.name %></p>
-        <!--  < @contributors[1..4].each do |contributor|  -->
-          <!--  <p>contributor.user_name </p> -->
-          <!--  <p>commits:  contributor.contributions </p> -->
-        <!--   end -->
-        <!--  <p>Total Merged PRs:  @pull_count  </p> -->
-        </footer>
-    </body>
-  </div>
+      </div>
+      <footer>
+        <p>github repo: <%= @repo.name %></p>
+    <!--  < @contributors[1..4].each do |contributor|  -->
+      <!--  <p>contributor.user_name </p> -->
+      <!--  <p>commits:  contributor.contributions </p> -->
+    <!--   end -->
+    <!--  <p>Total Merged PRs:  @pull_count  </p> -->
+      </footer>
+    </div>
+  </body>
+
 </html>

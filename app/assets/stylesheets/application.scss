@@ -14,3 +14,106 @@
  */
 
  @import "bootstrap";
+
+ body {
+   background-color: ghostwhite;
+ }
+
+ .page-content {
+   position: relative;
+   min-height: 100vh;
+ }
+
+form {
+  padding: 5px;
+  margin:  2% auto;
+  width: 100%
+}
+
+label {
+  margin: 5px;
+  padding: 5px;
+}
+
+input {
+  padding: 5px;
+  width: 50%;
+  margin: 5px;
+}
+
+a {
+  color: darkslategrey;
+  text-decoration: none;
+}
+
+nav {
+  background-color: darkslategrey;
+  padding: 2%;
+  color: white;
+  display: flex;
+  justify-content: space-around;
+}
+
+footer {
+  background-color: darkslategrey;
+  color: white;
+  padding: 1%;
+  position: absolute;
+  bottom: -2%;
+  width: 100%;
+  margin-top: 2%;
+}
+
+h1, h2, h3 {
+  margin: 2% auto;
+  text-align: center;
+  width: 50%;
+}
+
+.admin-links {
+  display: flex;
+  justify-content: space-around;
+}
+nav a{
+  color: white;
+  width: 25%;
+}
+
+nav a:hover{
+  color: white;
+}
+
+a:hover{
+  font-weight: bold;
+  color: darkslategray;
+}
+
+.row {
+  margin: 1% auto;
+}
+
+.card {
+  margin: 1%;
+  width: 30%;
+  background-color: lavender;
+}
+
+.revenue {
+  padding: 1%;
+  margin: 2%;
+}
+
+.container {
+  padding: 4%;
+}
+
+.card a {
+  margin: 2px auto;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.card form {
+  margin: 2px auto;
+  text-align: center;
+}
