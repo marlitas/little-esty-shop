@@ -44,12 +44,13 @@ RSpec.describe 'merchant dashboard page' do
     @transaction17 = @invoice3.transactions.create!(credit_card_number: "7894739999", credit_card_expiration_date: '04/20', result: 1)
     @transaction18 = @invoice3.transactions.create!(credit_card_number: "7894739999", credit_card_expiration_date: '04/20', result: 1)
 
-    @invoice1.items << [@item1]
-    @invoice2.items << [@item1]
-    @invoice3.items << [@item1]
-    @invoice4.items << [@item2]
-    @invoice5.items << [@item2]
-    @invoice6.items << [@item1]
+    @ii1 = create(:invoice_item, invoice_id: @invoice1.id, item_id: @item1.id)
+    @ii2 = create(:invoice_item, invoice_id: @invoice2.id, item_id: @item1.id)
+    @ii3 = create(:invoice_item, invoice_id: @invoice3.id, item_id: @item1.id)
+    @ii4 = create(:invoice_item, invoice_id: @invoice4.id, item_id: @item2.id)
+    @ii5 = create(:invoice_item, invoice_id: @invoice5.id, item_id: @item2.id)
+    @ii6 = create(:invoice_item, invoice_id: @invoice6.id, item_id: @item1.id)
+
   end
 
   describe 'links' do
@@ -81,21 +82,20 @@ RSpec.describe 'merchant dashboard page' do
     end
 
     it 'links to each items invoice' do
-      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item3.id, status: 1, created_at: "2012-03-25 09:54:09 UTC")
-      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item4.id, status: 1, created_at: "2012-03-24 09:54:09 UTC")
-      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item1.id, status: 2)
-      InvoiceItem.create!(invoice_id: @invoice7.id, item_id: @item2.id, status: 1, created_at: "2012-03-23 09:54:09 UTC")
+      create(:invoice_item, invoice_id: @invoice7.id, item_id: @item3.id)
+      create(:invoice_item, invoice_id: @invoice7.id, item_id: @item4.id)
+      create(:invoice_item, invoice_id: @invoice7.id, item_id: @item1.id)
+      create(:invoice_item, invoice_id: @invoice7.id, item_id: @item2.id)
 
       visit "/merchants/#{@merchant1.id}/dashboard"
 
       within(:css, "##{@item3.id}") do
-      click_on("#{@invoice7.id}")
+        click_on("#{@invoice7.id}")
       end
 
       expect(current_path).to eq("/merchants/#{@merchant1.id}/invoices/#{@invoice7.id}")
     end
   end
-
 
   describe 'merchant' do
     it 'can display merchant name' do
