@@ -27,5 +27,15 @@ RSpec.describe 'New Discount' do
       expect(page).to have_content('16')
       expect(page).to have_content('40')
     end
+
+    it 'can not create discount without percent' do
+      visit "/merchants/#{@merchant1.id}/discounts/new"
+
+      fill_in('Quantity Threshold', with:('16'))
+      click_on('Create Discount')
+
+      expect(page).to have_content('Discount not created: Required information missing')
+      expect(page).to have_button('Create Discount')
+    end
   end
 end
