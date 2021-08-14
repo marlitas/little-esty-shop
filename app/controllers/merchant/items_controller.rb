@@ -25,10 +25,10 @@ class Merchant::ItemsController < ApplicationController
 
   def update
     item = Item.find(params[:id])
-    merchant = Merchant.find(params[:merchant_id])
+    merchant = Merchant.find(item.merchant_id)
     if params[:status].present?
       item.update!(status: params[:status].to_i)
     end
-    redirect_to "/merchants/#{params[:merchant_id]}/items"
+    redirect_to "/merchants/#{merchant.id}/items"
   end
 end

@@ -1,20 +1,15 @@
 <div class="admin-links">
-  <%= link_to 'My Items', "/merchants/#{@merchant.id}/items" %>
-  <%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices" %>
-  <%= link_to 'My Discounts', "/merchants/#{@merchant.id}/discounts" %>
+  <%= link_to 'My Items', "/merchants/#{@item.merchant_id}/items" %>
+  <%= link_to 'My Invoices', "/merchants/#{@item.merchant_id}/invoices" %>
+  <%= link_to 'My Discounts', "/merchants/#{@item.merchant_id}/discounts" %>
 </div>
 
-<h3><%= @item.name %></h3>
+<h1><%= @item.name %></h1>
 <% flash.each do |type, msg| %>
   <div>
     <%= msg %>
   </div>
 <% end %>
-<p><%= @item.description %></p>
-<p><%= @item.unit_price %></p>
-<p><%= link_to "Edit This Item", "/merchants/#{@item.merchant_id}/items/#{@item.id}/edit" %></p>
-
-<h1><%= @item.name %> </h1>
-
 <p>Description: <%= @item.description %> </p>
 <p>Current Selling Price: $<%= @item.price_to_dollars %> </p>
+<p><%= link_to "Edit This Item", "/merchants/#{@item.merchant_id}/items/#{@item.id}/edit" %></p>
