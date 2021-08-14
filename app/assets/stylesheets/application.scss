@@ -16,12 +16,14 @@
  @import "bootstrap";
 
  body {
-   background-color: ghostwhite;
+   background-color: snow;
  }
 
  .page-content {
    position: relative;
-   min-height: 100vh;
+   min-height: 100%;
+   display: block;
+   padding-bottom: 250px;
  }
 
 form {
@@ -55,6 +57,7 @@ nav {
   color: white;
   display: flex;
   justify-content: space-around;
+  align-content: center;
 }
 
 footer {
@@ -62,24 +65,29 @@ footer {
   color: white;
   padding: 1%;
   position: absolute;
-  bottom: -2%;
+  bottom: 0;
   width: 100%;
   margin-top: 2%;
+  height: 250px;
 }
 
 h1, h2, h3 {
   margin: 2% auto;
   text-align: center;
-  width: 50%;
+  width: 80%;
 }
 
 .admin-links {
   display: flex;
   justify-content: space-around;
+  background-color: lavender;
+  align-items: center;
+  padding: 5px;
 }
 nav a{
   color: white;
   width: 25%;
+  text-align: center;
 }
 
 nav a:hover{

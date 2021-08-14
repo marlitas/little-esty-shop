@@ -106,7 +106,7 @@ RSpec.describe Invoice, type: :model do
       expect(@invoice3.calculate_discount(@merchant2, @ii4)).to eq(9000000)
     end
 
-    it 'updates invoice item with discount if applicable' do
+    xit 'updates invoice item with discount if applicable' do
       @invoice3.apply_item_discount
 
       expect(@ii4.discount).to eq(90000)

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  root 'welcome#index'
+
   resources :customers
   resources :merchants, module: :merchant do
     resources :items
@@ -13,7 +14,7 @@ Rails.application.routes.draw do
 
   patch '/admin/merchants/update/:id', to: 'admin/merchants#update_status', as: 'update_status'
 
-  namespace :admin do #resources :admin, module: :admin do (namespace gives: scope, module and rake routes)
+  namespace :admin do
     resources only: [:index]
     resources :merchants
     resources :invoices

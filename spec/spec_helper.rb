@@ -17,8 +17,8 @@ RSpec.configure do |config|
 
   config.before(:each) do
     allow(Repo).to receive(:name).and_return('little-esty-shop')
-    #allow(Contributor).to receive(:user_name).and_return('github user')
-    #allow(Contributor).to receive(:contributions).and_return(30)
+    allow_any_instance_of(GithubService).to receive(:contributor).and_return([{user_name: 'marlitas', contributions: '20'}, {user_name: 'sami-p', contributions: '20'}, {user_name: 'Jtpiland', contributions: '20'}, {user_name: 'danembb', contributions: '20'}])
+    allow_any_instance_of(GithubService).to receive(:pull_count).and_return([1, 2, 3, 4, 5, 6, 7, 8, 9])
   end
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest

@@ -14,7 +14,6 @@ class Invoice < ApplicationRecord
     .distinct
   end
 
-#switch to merchant instance method?
   def self.merchant_invoices(id)
     joins(:items)
     .select('invoices.*')

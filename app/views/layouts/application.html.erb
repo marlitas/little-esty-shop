@@ -12,8 +12,10 @@
   <body>
     <div class="page-content">
       <nav>
+        <%= link_to 'Welcome', "/"  %>
         <%= link_to 'Admin', "/admin" %>
         <%= link_to 'Merchant', "/merchants"  %>
+        <%= link_to 'Github Repo', "https://github.com/marlitas/little-esty-shop" %>
       </nav>
       <div class="container">
         <% flash.each do |type, msg| %>
@@ -25,11 +27,17 @@
       </div>
       <footer>
         <p>github repo: <%= @repo.name %></p>
-    <!--  < @contributors[1..4].each do |contributor|  -->
-      <!--  <p>contributor.user_name </p> -->
-      <!--  <p>commits:  contributor.contributions </p> -->
-    <!--   end -->
-    <!--  <p>Total Merged PRs:  @pull_count  </p> -->
+        <p>Total Merged PRs: <%= @pull_count %></p>
+
+        <h5>Contributors:</h5>
+        <div class="row">
+          <% @contributors[0..4].each do |contributor| %>
+          <div class="col-3">
+            <p><%= contributor.user_name %></p>
+            <p>commits: <%= contributor.contributions %></p>
+          </div>
+          <% end %>
+        </div>
       </footer>
     </div>
   </body>
