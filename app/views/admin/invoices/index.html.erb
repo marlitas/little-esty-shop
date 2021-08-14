@@ -1,10 +1,9 @@
-<h1>Invoices</h1>
-
 <div class="admin-links">
-  <p>Admin Links:</p>
   <%= link_to "Dashboard", admin__index_path %>
   <%= link_to "Merchants", admin_merchants_path %>
 </div>
+
+<h1>Invoices</h1>
 
 <div class="row">
   <% @invoices.each do |invoice| %>

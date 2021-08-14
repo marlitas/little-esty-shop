@@ -1,11 +1,10 @@
-<h1><%= @merchant.name %></h1>
-
 <div class="admin-links">
-  <p>Merchant Links:</p>
   <%= link_to 'My Items', "/merchants/#{@merchant.id}/items" %>
   <%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices" %>
   <%= link_to 'My Discounts', "/merchants/#{@merchant.id}/discounts" %>
 </div>
+
+<h1><%= @merchant.name %></h1>
 
 <ol>
   <% Customer.top_customers(@merchant.id).each do |customer| %>

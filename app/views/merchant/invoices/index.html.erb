@@ -1,10 +1,9 @@
-<h1>My Invoices</h1>
-
 <div class="admin-links">
-  <p>Merchant Links:</p>
   <%= link_to 'My Items', "/merchants/#{params[:merchant_id]}/items" %>
   <%= link_to 'My Discounts', "/merchants/#{params[:merchant_id]}/discounts" %>
 </div>
+
+<h1>My Invoices</h1>
 
 <div class="row">
   <% @invoices.each do |invoice| %>

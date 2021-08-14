@@ -1,3 +1,9 @@
+<div class="admin-links">
+  <%= link_to 'My Items', "/merchants/#{@merchant.id}/items" %>
+  <%= link_to 'My Invoices', "/merchants/#{@merchant.id}/invoices" %>
+  <%= link_to 'My Discounts', "/merchants/#{@merchant.id}/discounts" %>
+</div>
+
 <h3><%= @item.name %></h3>
 <% flash.each do |type, msg| %>
   <div>
@@ -12,4 +18,3 @@
 
 <p>Description: <%= @item.description %> </p>
 <p>Current Selling Price: $<%= @item.price_to_dollars %> </p>
-
